@@ -20,8 +20,8 @@ const uploadOnCloudinary = async (localFilePath) => {
 
         // Once upload file completed ,remove it from local storage
         // console.log("file is deleted")
-        // fs.unlinkSync(localFilePath) 
-        // console.log("file is deleted")
+        fs.unlinkSync(localFilePath) 
+        console.log("file is deleted")
         return respone;
     }
     catch(error){
