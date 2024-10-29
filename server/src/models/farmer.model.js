@@ -67,7 +67,7 @@ farmerSchema.pre("save", async function(next){
 })
 
 // To validate the encrypted password and farmer password 
-farmerSchema.methods.isPasswordCorrect =async function (password) {
+farmerSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
@@ -105,4 +105,4 @@ farmerSchema.methods.generateRefreshToken = function(){
     )
 }
 
-export const Farmer = mongoose.model("Farmer", farmerSchema);
+export  const Farmer = mongoose.model("Farmer", farmerSchema);
