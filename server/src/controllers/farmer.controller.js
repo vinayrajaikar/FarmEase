@@ -168,7 +168,7 @@ const logoutFarmer = asyncHandler(async (req, res) => {
         )
 })
 
-const refreshAccessToken = asyncHandler(async (req, res) => {
+const farmer_refreshAccessToken = asyncHandler(async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
     if(!incomingRefreshToken){
@@ -220,13 +220,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
-const getCurrentUser = asyncHandler(async(req,res)=>{
+const farmer_getCurrentUser = asyncHandler(async(req,res)=>{
     return res
     .status(200)
     .json(new ApiResponse(200, req.user, "User details"))
 })
 
-const updateAccountDetails = asyncHandler(async (req, res) => {
+const farmer_updateAccountDetails = asyncHandler(async (req, res) => {
     const { fullName, contactNumber, username, pincode, email } = req.body;
 
     // Check if all fields are provided
@@ -318,7 +318,7 @@ const updateFarmerPassword = asyncHandler(async (req, res) => {
     }
 
     // Hash the new password and save
-    farmer.password = await bcrypt.hash(newPassword,10);
+    farmer.password = newPassword;
     await farmer.save();
 
     res.status(200).json({
@@ -331,9 +331,9 @@ export{
     registerFarmer,
     loginFarmer,
     logoutFarmer,
-    refreshAccessToken,
-    getCurrentUser,
-    updateAccountDetails,
+    farmer_refreshAccessToken,
+    farmer_getCurrentUser,
+    farmer_updateAccountDetails,
     updateFarmerCoverImage,
     updateFarmerPassword
 }
