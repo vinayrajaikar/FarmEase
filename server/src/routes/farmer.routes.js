@@ -9,7 +9,7 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router= Router();
 // Farmer-----------------------------------------------------------------------------------------
 // Register farmer 
-router.route("/register").post(
+router.route("/registerfarmer").post(
     upload.fields([
         {
             name: "coverImage", 
@@ -30,9 +30,6 @@ router.route("/farmer-current-user").get(verifyJWT,farmer_getCurrentUser)
 router.route("/farmer-update-account-details").post(verifyJWT, farmer_updateAccountDetails)
 router.route("/update-farmer-cover-image").patch(verifyJWT, upload.single("coverImage"),updateFarmerCoverImage)
 router.route("/update-farmer-password").patch(verifyJWT, updateFarmerPassword)
-// -----------------------------------------------------------------------------------------
-
-
 
 export default router
 

@@ -1,6 +1,6 @@
 import mongoose,{Schema} from "mongoose";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const supplierSchema = new mongoose.Schema(
     {
@@ -39,8 +39,12 @@ const supplierSchema = new mongoose.Schema(
             unique: true
         },
 
-        supplyCategory:{
+        description: {
             type: String,
+        },
+
+        supplyCategory:{
+            type: [String],
             required: true 
         },
 
