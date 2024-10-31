@@ -19,7 +19,9 @@ app.use(cookieParser())
 
 // Routes
 import farmerRouter from "./routes/farmer.routes.js"
+app.use("/api/v1/farmer",farmerRouter) 
 
-app.use("/api/v1/farmers",farmerRouter) 
+import supplierRouter from "./routes/supplier.routes.js"
+app.use("/api/v1/supplier",supplierRouter)
 
 export {app}

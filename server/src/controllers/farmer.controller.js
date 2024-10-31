@@ -4,7 +4,7 @@ import { Farmer } from "../models/farmer.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 
 const generateAccessAndRefreshToken = async(userId)=>{
     try{
@@ -89,8 +89,12 @@ const loginFarmer = asyncHandler(async (req, res) => {
     const { email,username,password } = req.body;
 
     // Validation
-    if(!(email || username)){
-        throw new ApiError(400,"Username or email is required");
+    if(!username && !email){
+        throw new ApiError(400,"username or email required");
+    }
+
+    if(!password){
+        throw new ApiError(400,"password required");
     }
     
     //find user
