@@ -325,10 +325,7 @@ const updateFarmerPassword = asyncHandler(async (req, res) => {
     farmer.password = newPassword;
     await farmer.save();
 
-    res.status(200).json({
-        success: true,
-        message: "Password updated successfully!",
-    });
+    res.status(200).json( new ApiResponse(200, "Password updated successfully!") );
 })
 
 export{

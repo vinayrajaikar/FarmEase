@@ -58,6 +58,12 @@ const supplierSchema = new mongoose.Schema(
             required: true
         },
 
+        role:{
+            type: String,
+            default: "supplier",
+            // enum: ["farmer", "supplier"]
+        },
+
         refreshToken: {
             type: String
         }
@@ -86,7 +92,8 @@ supplierSchema.methods.generateAccessToken = function(){
                 email: this.email,
                 fullName: this.fullName,
                 contactNumber: this.contactNumber,
-                pincode: this.pincode
+                pincode: this.pincode,
+                role: this.role
             },
             process.env.ACCESS_TOKEN_SECRET,
             {
