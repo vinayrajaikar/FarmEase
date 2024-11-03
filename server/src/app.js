@@ -24,4 +24,7 @@ app.use("/api/v1/farmer",farmerRouter)
 import supplierRouter from "./routes/supplier.routes.js"
 app.use("/api/v1/supplier",supplierRouter)
 
+import newsRouter from "./routes/news.routes.js"
+app.use("/api/v1/news",newsRouter)
+
 export {app}

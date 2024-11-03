@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import {Farmer} from './farmer.model.js';
+import {Supplier} from "./supplier.model.js";
 
 const newsSchema = new mongoose.Schema(
     {
