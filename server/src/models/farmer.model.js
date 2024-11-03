@@ -2,7 +2,7 @@ import mongoose, {Schema} from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const farmerSchema = new mongoose.Schema(
+const farmerSchema = new Schema(
     {
         username:{
             type: String,

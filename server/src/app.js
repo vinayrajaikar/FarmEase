@@ -27,4 +27,7 @@ app.use("/api/v1/supplier",supplierRouter)
 import newsRouter from "./routes/news.routes.js"
 app.use("/api/v1/news",newsRouter)
 
+import likeRouter from "./routes/like.routes.js"
+app.use("/api/v1/like",likeRouter)
+
 export {app}
