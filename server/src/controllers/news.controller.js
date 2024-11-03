@@ -4,6 +4,7 @@ import { Farmer } from "../models/farmer.model.js";
 import { Supplier } from "../models/supplier.model.js";
 import { News } from "../models/news.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import mongoose from "mongoose";
 
 const uploadNews = asyncHandler(async (req, res) => {
     const { content, link } = req.body;
@@ -47,6 +48,9 @@ const deleteNews = asyncHandler(async (req, res) => {
 
 });
 
+
+
 export { 
-    uploadNews 
+    uploadNews
+
 };
