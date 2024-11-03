@@ -102,6 +102,7 @@ supplierSchema.methods.generateAccessToken = function(){
         )
 }
 
+
 supplierSchema.methods.generateRefreshToken = function(){
     return  jwt.sign(
         {
