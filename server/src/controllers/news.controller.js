@@ -41,16 +41,153 @@ const uploadNews = asyncHandler(async (req, res) => {
 });
 
 const updateNews = asyncHandler(async (req, res) => {
+    const {newsId} = req.params;
+    const userId = req.user._id;
+
+    if (!mongoose.Types.ObjectId.isValid(newsId)) { 
+        throw new ApiError(400, "Invalid news ID");
+    }
+
+    // Find the user based on the role
+    // let user;
+    let role= req.user.role;
+    let user;
+    if (role === "farmer") {
+        user = await Farmer.findById(userId);
+    } else if (role === "supplier") {
+        user= await Supplier.findById(userId);
+    }
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Check if the news belongs to the user
+    const news = await News.findById(newsId);
+    if (!news) {
+        throw new ApiError(404, "News not found");
+    }
+    if (news.user.toString() !== userId.toString()) {
+        throw new ApiError(403, "Access denied, news does not belong to the user");
+    }
+
+    // Update the news entry
+    
+    const newsupdate = await News.findByIdAndUpdate(
+        newsId, 
+        req.body, 
+        { new: true }
+    );
+
+    if (!newsupdate) {
+        throw new ApiError(404, "News updation failed");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            newsupdate,
+            "News updated successfully"
+        )
+    )
 
 });
 
 const deleteNews = asyncHandler(async (req, res) => {
+    const { newsId } = req.params;
+    const userId = req.user._id;
 
+    if (!mongoose.Types.ObjectId.isValid(newsId)) {
+        throw new ApiError(400, "Invalid news ID");
+    }
+
+    // Find the user based on the role
+    let role= req.user.role;
+    let user;
+    if (role === "farmer") {
+        user = await Farmer.findById(userId);
+    } else if (role === "supplier") {
+        user= await Supplier.findById(userId);
+    }
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Check if the news belongs to the user
+    const news = await News.findById(newsId);
+    if (!news) {
+        throw new ApiError(404, "News not found");
+    }
+    if (news.user.toString() !== userId.toString()) {
+        throw new ApiError(403, "Access denied, news does not belong to the user");
+    }
+
+    // Delete the news entry
+    const newsdelete = await News.findByIdAndDelete(newsId);
+
+    if (!newsdelete) {
+        throw new ApiError(404, "News deletion failed");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            newsdelete,
+            "News deleted successfully"
+        )
+    )
+});
+
+// const getAllNews = asyncHandler(async (req, res) => {
+
+//     const news = await News.find().sort({ createdAt: -1 });
+//     return res.status(200).json(
+//         new ApiResponse(
+//             200,
+//             news,
+//             "News retrieved successfully"
+//         )
+//     )
+// })
+
+const getAllNews = asyncHandler(async (req, res) => {
+    const newsWithLikes = await News.aggregate([
+        {
+            $lookup: {
+                from: "likes",               // The 'Like' collection name
+                localField: "_id",           // The _id of News
+                foreignField: "news",        // The 'news' field in Like that references News
+                as: "likes"                  // Name the resulting array as "likes"
+            }
+        },
+        {
+            $addFields: {
+                likeCount: { $size: "$likes" } // Adds a new field 'likeCount' as the size of the 'likes' array
+            }
+        },
+        {
+            $project: {
+                likes: 0                      // Optionally exclude the 'likes' array to return only the count
+            }
+        },
+        { $sort: { createdAt: -1 } }          // Sort by creation date (most recent first)
+    ]);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            newsWithLikes,
+            "News retrieved successfully"
+        )
+    );
 });
 
 
 
 export { 
-    uploadNews
-
+    uploadNews,
+    updateNews,
+    deleteNews,
+    getAllNews
 };

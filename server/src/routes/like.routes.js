@@ -9,8 +9,8 @@ const router= Router();
 
 // like-----------------------------------------------------------------------------------------
 
-router.route("/add-news-like").post(verifyJWT, toogleNewsLike );
-router.route("/get-liked-news-count").get(verifyJWT, getLikedNewsCount);
+router.route("/add-news-like/:newsId").post(verifyJWT, toogleNewsLike );
+router.route("/get-liked-news-count/:newsId").get(verifyJWT, getLikedNewsCount);
 
 
 export default router

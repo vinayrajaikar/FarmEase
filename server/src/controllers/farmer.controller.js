@@ -86,11 +86,11 @@ const registerFarmer = asyncHandler(async (req, res) => {
 
 const loginFarmer = asyncHandler(async (req, res) => {
     // Get user details from frontend
-    const { email,username,password } = req.body;
+    const { email,password } = req.body;
 
     // Validation
-    if(!username && !email){
-        throw new ApiError(400,"username or email required");
+    if(!email){
+        throw new ApiError(400,"email required");
     }
 
     if(!password){
@@ -99,7 +99,7 @@ const loginFarmer = asyncHandler(async (req, res) => {
     
     //find user
     const farmer = await Farmer.findOne({
-        $or: [{username}, {email}]
+       email
     });
 
     if(!farmer){

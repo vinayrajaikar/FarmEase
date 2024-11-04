@@ -6,11 +6,11 @@ import { Like } from "../models/like.model.js";
 
 
 const toogleNewsLike = asyncHandler(async (req, res) => {
-    const { newsId } = req.body;
+    const { newsId } = req.params;
     const userId = req.user._id;    
     const userType = req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1);
-    console.log(newsId);
-    console.log(userId);
+    // console.log(newsId);
+    // console.log(userId);
 
     if (!mongoose.Types.ObjectId.isValid(newsId)) {
         throw new ApiError(400, "Invalid news ID");
@@ -45,7 +45,7 @@ const toogleNewsLike = asyncHandler(async (req, res) => {
 })
 
 const getLikedNewsCount = asyncHandler(async (req, res) => {
-    const { newsId } = req.body;
+    const { newsId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(newsId)) {
         throw new ApiError(400, "Invalid news ID");
@@ -59,7 +59,7 @@ const getLikedNewsCount = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200,count, "Liked news count retrieved successfully")    
+        .json(new ApiResponse(200,{count:count}, "Liked news count retrieved successfully")    
     );
 })
 
