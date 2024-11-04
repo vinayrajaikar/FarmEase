@@ -31,6 +31,6 @@ const newsSchema = new mongoose.Schema(
     }
 );
 
-// newsSchema.plugin(mongooseAggregatePaginate);
+newsSchema.plugin(mongooseAggregatePaginate);
 
 export const News = mongoose.model("News", newsSchema);

@@ -90,11 +90,11 @@ const registerSupplier = asyncHandler(async (req, res, next) => {
 const loginSupplier = asyncHandler(async (req, res, next) => {
 
     // Get user details from front end
-    const {username, password, email} = req.body;
+    const { email,password} = req.body;
 
     // Validation
-    if(!username && !email){
-        throw new ApiError(400,"username or email required");
+    if(!email){
+        throw new ApiError(400,"email required");
     }
 
     if(!password){
@@ -103,7 +103,7 @@ const loginSupplier = asyncHandler(async (req, res, next) => {
 
     // find user in db
     const supplier = await Supplier.findOne({
-        $or: [{username},{email}]
+        email
     });
 
     if(!supplier){
