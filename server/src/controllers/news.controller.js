@@ -140,7 +140,6 @@ const deleteNews = asyncHandler(async (req, res) => {
 });
 
 // const getAllNews = asyncHandler(async (req, res) => {
-
 //     const news = await News.find().sort({ createdAt: -1 });
 //     return res.status(200).json(
 //         new ApiResponse(
