@@ -25,15 +25,14 @@ const generateAccessAndRefreshToken = async(userId)=>{
 }
 
 const registerFarmer = asyncHandler(async (req, res) => {
-    // console.log("Working!");
 
     // ------------------------------------------------------
     // Get user details from frontend
-    const { username, email, password, fullName, contactNumber, pincode } = req.body;
+    const { username, email, password, fullName, contactNumber, area } = req.body;
     // console.log(username);
     
     // Validation
-    if(!username || !email || !fullName || !contactNumber || !pincode || !password){
+    if(!username || !email || !fullName || !contactNumber || !area || !password){
         throw new ApiError(400,"All Fields are required");
     }
 
@@ -60,7 +59,7 @@ const registerFarmer = asyncHandler(async (req, res) => {
         password,
         fullName,
         contactNumber,
-        pincode,
+        area,
         coverImage: CoverImage?.url || ""
     }) 
 
@@ -231,10 +230,10 @@ const farmer_getCurrentUser = asyncHandler(async(req,res)=>{
 })
 
 const farmer_updateAccountDetails = asyncHandler(async (req, res) => {
-    const { fullName, contactNumber, username, pincode, email } = req.body;
+    const { fullName, contactNumber, username, area, email } = req.body;
 
     // Check if all fields are provided
-    if (!fullName || !contactNumber || !username || !pincode || !email) {
+    if (!fullName || !contactNumber || !username || !area || !email) {
         throw new ApiError(400, "All fields are required");
     }
 
@@ -264,7 +263,7 @@ const farmer_updateAccountDetails = asyncHandler(async (req, res) => {
                 fullName,
                 contactNumber,
                 username,
-                pincode,
+                area,
                 email
             }
         },

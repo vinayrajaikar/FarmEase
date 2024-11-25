@@ -30,10 +30,10 @@ const registerSupplier = asyncHandler(async (req, res, next) => {
     // -------------------------------------
 
     // Get user details from front end
-    const {username, email, fullName, contactNumber, pincode, password, supplyCategory, description} = req.body;
+    const {username, email, fullName, contactNumber, area, password, supplyCategory, description} = req.body;
 
     // Validation
-    if(!username || !email || !fullName || !contactNumber || !pincode || !password || !description){
+    if(!username || !email || !fullName || !contactNumber || !area || !password || !description){
         throw new ApiError(400,"All Fields are required");
     }
 
@@ -60,7 +60,7 @@ const registerSupplier = asyncHandler(async (req, res, next) => {
         fullName,
         contactNumber,
         description,
-        pincode,
+        area,
         password,
         supplyCategory,
         coverImage:CoverImage?.url || "",
@@ -238,10 +238,10 @@ const supplier_getCurrentUser = asyncHandler(async (req, res, next) => {
 
 const supplier_updateAccountDetails = asyncHandler(async (req, res, next) => {
 
-    const {fullName, contactNumber, username, pincode, email, description, supplyCategory} = req.body;
+    const {fullName, contactNumber, username, area, email, description, supplyCategory} = req.body;
 
     // Check if all fields are provided
-    if (!fullName || !contactNumber || !username || !pincode || !email || !description || !supplyCategory) {
+    if (!fullName || !contactNumber || !username || !area || !email || !description || !supplyCategory) {
         throw new ApiError(400, "All fields are required");
     }
 
@@ -271,7 +271,7 @@ const supplier_updateAccountDetails = asyncHandler(async (req, res, next) => {
                 fullName,
                 contactNumber,
                 username,
-                pincode,
+                area,
                 email,
                 description,
                 supplyCategory
@@ -337,8 +337,6 @@ const updateSupplierPassword = asyncHandler(async (req, res, next) => {
 
     res.status(200).json(new ApiResponse(200, "Password updated successfully"));
 })
-
-
 
 export{
     registerSupplier,

@@ -53,15 +53,14 @@ const supplierSchema = new mongoose.Schema(
             // required: true
         },
 
-        pincode:{
-            type: Number,
+        area:{
+            type: String,
             required: true
         },
 
         role:{
             type: String,
             default: "supplier",
-            // enum: ["farmer", "supplier"]
         },
 
         refreshToken: {

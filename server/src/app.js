@@ -30,4 +30,7 @@ app.use("/api/v1/news",newsRouter)
 import likeRouter from "./routes/like.routes.js"
 app.use("/api/v1/like",likeRouter)
 
+import dislikeRouter from "./routes/dislike.routes.js"
+app.use("/api/v1/dislike",dislikeRouter)
+
 export {app}

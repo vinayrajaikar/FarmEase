@@ -44,8 +44,8 @@ const farmerSchema = new Schema(
             // required: true
         },
 
-        pincode:{
-            type: Number,
+        area:{
+            type: String,
             required: true
         },
 
