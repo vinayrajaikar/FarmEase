@@ -1,4 +1,4 @@
-# FarmEase 🌾  
+# FarmEase 🌱  
 **Empowering Farmers with Technology**  
 
 FarmEase is a comprehensive solution aimed at revolutionizing agriculture through technology. It provides farmers with smart tools, actionable insights, and a platform to connect with suppliers. By leveraging advanced APIs, weather forecasting, and AI-based leaf detection, FarmEase empowers users to enhance cultivation, increase productivity, and share valuable information.
