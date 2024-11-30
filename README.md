@@ -1,7 +1,7 @@
 # FarmEase 🌱  
 **Empowering Farmers with Technology**  
 
-FarmEase is a comprehensive solution aimed at revolutionizing agriculture through technology. It provides farmers with smart tools, actionable insights, and a platform to connect with suppliers. By leveraging advanced APIs, weather forecasting, and AI-based leaf detection, FarmEase empowers users to enhance cultivation, increase productivity, and share valuable information.
+FarmEase is a comprehensive web-application solution that helps farmers to optimize their agricultural practices through weather-based crop suggestions, AI-powered leaf detection, and remedies using the Gemini API. It connects farmers with suppliers and facilitates knowledge sharing via uploaded news and farming schemas. The platform empowers farmers to enhance cultivation and boost productivity.
 
 ---
 
