@@ -31,26 +31,7 @@ FarmEase is a comprehensive web-application solution that helps farmers to optim
 - Both farmers and suppliers can upload news and schemas.  
 - A centralized platform for sharing knowledge, techniques, and updates to foster a collaborative agricultural community.
 
----
 
-## **Tech Stack**  
-
-### **Frontend**  
-- React.js  
-- Tailwind CSS  
-
-### **Backend**  
-- Node.js  
-- Express.js  
-- MongoDB  
-
-### **APIs Used**  
-- **Gemini API**: Provides remedies for plant diseases based on leaf detection.  
-
-### **Other Tools**  
-- Cloudinary for file uploads.  
-- Redux Toolkit for state management.  
-- Axios for API calls.  
 
 
 
