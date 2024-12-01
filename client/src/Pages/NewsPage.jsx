@@ -1,57 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ThumbsUp, ThumbsDown, Link2, ChevronDown, ChevronUp } from 'lucide-react';
-import { uploadNews, updateNews, deleteNews, getAllNews } from '../Redux/Slices/newsSlice';
+import { ThumbsUp, ThumbsDown, Link2, ChevronDown, ChevronUp } from "lucide-react";
+import { getAllNews,uploadNews } from "../Redux/Slices/newsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function NewsPage() {
-  const dispatch = useDispatch();
-  const { newsDetails, loading, status } = useSelector((state) => state.news);
-
-  const [newPostContent, setNewPostContent] = useState('');
-  const [newPostLink, setNewPostLink] = useState('');
+  const [newPostContent, setNewPostContent] = useState("");
+  const [newPostLink, setNewPostLink] = useState("");
   const [expandedPosts, setExpandedPosts] = useState({});
-  const [showCreatePost, setShowCreatePost] = useState(false); // Toggle visibility of "Create New Post" card
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [news, setNews] = useState([]); // State to store fetched news
+  const dispatch = useDispatch();
 
-  // Fetch all news posts on mount
   useEffect(() => {
-    dispatch(getAllNews());
+    // Dispatch the action to fetch all news and set posts
+    const fetchNews = async () => {
+      try {
+        const res = await dispatch(getAllNews());  // Dispatch the action
+        // console.log("News fetched successfully");
+        // console.log(res.payload.data);
+        setNews(res.payload.data);  // Set the fetched news to state
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    };
+
+    fetchNews();
   }, [dispatch]);
 
-  const handleCreatePost = (e) => {
-    e.preventDefault();
-    const newPost = {
+  const handleCreatePost = async () => {
+    const newpost={
       content: newPostContent,
-      link: newPostLink,
-    };
-    dispatch(uploadNews(newPost)); // Upload new post
-    setNewPostContent('');
-    setNewPostLink('');
-    setShowCreatePost(false); // Hide form after submitting
+      link: newPostLink
+    }
+
+    const res= await dispatch(uploadNews(newpost));
+    console.log(res);
+    console.log("Helooo")
+    if(res.type=="uploadNews/fulfilled"){
+      alert("News uploaded successfully");
+    }
+    setNewPostContent("");
+    setNewPostLink("");
+    // setShowCreatePost(false);
   };
 
   const handleLike = (postId) => {
-    // Handle like logic
-    const updatedPost = newsDetails.map((post) =>
-      post.id === postId ? { ...post, likes: post.likes + 1 } : post
-    );
-    dispatch(updateNews({ newsId: postId, details: updatedPost }));
+    setNews(news.map((post) => (post._id === postId ? { ...post, likeCount: post.likeCount + 1 } : post)));
   };
 
   const handleDislike = (postId) => {
-    // Handle dislike logic
-    const updatedPost = newsDetails.map((post) =>
-      post.id === postId ? { ...post, dislikes: post.dislikes + 1 } : post
-    );
-    dispatch(updateNews({ newsId: postId, details: updatedPost }));
-  };
-
-  const handleDeletePost = (postId) => {
-    dispatch(deleteNews(postId)); // Delete post
+    setNews(news.map((post) => (post._id === postId ? { ...post, dislikeCount: post.dislikeCount + 1 } : post)));
   };
 
   const togglePostExpansion = (postId) => {
@@ -94,7 +97,7 @@ function NewsPage() {
                 onChange={(e) => setNewPostLink(e.target.value)}
               />
               <Button
-                type="submit"
+                onClick={handleCreatePost}
                 className="w-full sm:w-auto bg-[#6EE7B7] text-gray-800 hover:bg-[#6EE7B7]/80 transition-colors"
               >
                 Post
@@ -106,91 +109,72 @@ function NewsPage() {
 
       {/* List of posts */}
       <div className="space-y-6">
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          newsDetails?.map((post) => (
-            <Card key={post.id}>
-              <CardHeader>
-                <div className="flex items-center space-x-4">
-                  <Avatar>
-                    <AvatarImage src={post.avatar} alt={post.author} />
-                    <AvatarFallback>{post.author.split(' ').map((n) => n[0]).join('')}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-semibold">{post.author}</h3>
-                  </div>
+        {news.map((post) => (
+          <Card key={post._id}>
+            <CardHeader>
+              <div className="flex items-center space-x-4">
+                <Avatar>
+                  <AvatarImage src={post.avatar || "/placeholder-avatar.png"} alt={post.user} />
+                  <AvatarFallback>{post.userName.split(" ").map((n) => n[0]).join("")}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="font-semibold">{post.userName}</h3>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="mb-4 text-left">
-                  {expandedPosts[post.id]
-                    ? post.content
-                    : `${post.content.slice(0, 100)}${post.content.length > 100 ? '...' : ''}`}
-                </p>
-                <div className="mb-4 flex justify-start">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => togglePostExpansion(post.id)}
-                    className="bg-transparent"
-                  >
-                    {expandedPosts[post.id] ? (
-                      <>
-                        <ChevronUp className="mr-2 h-4 w-4" />
-                        Read less
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="mr-2 h-4 w-4" />
-                        Read more
-                      </>
-                    )}
-                  </Button>
-                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-left">
+                {expandedPosts[post._id]
+                  ? post.content
+                  : `${post.content.slice(0, 100)}${post.content.length > 100 ? "..." : ""}`}
+              </p>
+              <div className="mb-4 flex justify-start">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => togglePostExpansion(post._id)}
+                  className="bg-transparent"
+                >
+                  {expandedPosts[post._id] ? (
+                    <>
+                      <ChevronUp className="mr-2 h-4 w-4" />
+                      Read less
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="mr-2 h-4 w-4" />
+                      Read more
+                    </>
+                  )}
+                </Button>
+              </div>
 
-                {expandedPosts[post.id] && post.link && (
-                  <a
-                    href={post.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline flex items-center"
-                  >
-                    <Link2 className="mr-2 h-4 w-4" />
-                    {post.link}
-                  </a>
-                )}
-              </CardContent>
-              <CardFooter>
-                <div className="flex space-x-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleLike(post.id)}
-                  >
-                    <ThumbsUp className="mr-2 h-4 w-4" />
-                    {post.likes}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDislike(post.id)}
-                  >
-                    <ThumbsDown className="mr-2 h-4 w-4" />
-                    {post.dislikes}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleDeletePost(post.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          ))
-        )}
+              {expandedPosts[post._id] && post.link && (
+                <a
+                  href={post.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline flex items-center"
+                >
+                  <Link2 className="mr-2 h-4 w-4" />
+                  {post.link}
+                </a>
+              )}
+            </CardContent>
+            <CardFooter>
+              <div className="flex space-x-4">
+                <Button variant="outline" size="sm" onClick={() => handleLike(post._id)}>
+                  <ThumbsUp className="mr-2 h-4 w-4" />
+                  {post.likeCount}
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => handleDislike(post._id)}>
+                  <ThumbsDown className="mr-2 h-4 w-4" />
+                  {post.dislikeCount}
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );
