@@ -53,9 +53,9 @@ const getLikedNewsCount = asyncHandler(async (req, res) => {
 
     const count = await Like.countDocuments({ news: newsId});
 
-    if (!count) {
-        throw new ApiError(500, "Failed to get liked news count");
-    }
+    // if (!count) {
+    //     throw new ApiError(500, "Failed to get liked news count");
+    // }
 
     return res
         .status(200)

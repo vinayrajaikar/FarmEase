@@ -7,7 +7,7 @@ app.use(cors({
     // origin: process.env.CORS_ORIGIN,
     // credentials: true
 
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: 'http://localhost:5173', //frontend URL
     credentials: true,
 }));
 
