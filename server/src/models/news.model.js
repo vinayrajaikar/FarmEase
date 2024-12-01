@@ -15,6 +15,13 @@ const newsSchema = new mongoose.Schema(
             required: true,
             enum: ["Farmer", "Supplier"]  // Restricting to either "Farmer" or "Supplier"
         },
+
+        userName: {
+            type: String,
+            required: true,
+            trim: true
+        },
+
         content: {
             type: String,
             required: true,
@@ -22,6 +29,7 @@ const newsSchema = new mongoose.Schema(
         },
         link: {
             type: String,
+            required: true,
             trim: true
         },
 

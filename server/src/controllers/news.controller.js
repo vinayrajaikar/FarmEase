@@ -23,9 +23,12 @@ const uploadNews = asyncHandler(async (req, res) => {
         throw new ApiError(404, "User not found");
     }
 
+    // console.log(user);
+
     // Create a new news entry in the News collection
     const news = await News.create({
         user: user._id,
+        userName: user.username,
         userType: role.charAt(0).toUpperCase() + role.slice(1),  // Capitalize role to match "Farmer" or "Supplier"
         content,
         link
@@ -151,7 +154,7 @@ const deleteNews = asyncHandler(async (req, res) => {
 // })
 
 const getAllNews = asyncHandler(async (req, res) => {
-    const newsWithLikes = await News.aggregate([
+    const newsWithLikesAndDislikes = await News.aggregate([
         {
             $lookup: {
                 from: "likes",               // The 'Like' collection name
@@ -161,13 +164,23 @@ const getAllNews = asyncHandler(async (req, res) => {
             }
         },
         {
+            $lookup: {
+                from: "dislikes",            // The 'Dislike' collection name
+                localField: "_id",           // The _id of News
+                foreignField: "news",        // The 'news' field in Dislike that references News
+                as: "dislikes"               // Name the resulting array as "dislikes"
+            }
+        },
+        {
             $addFields: {
-                likeCount: { $size: "$likes" } // Adds a new field 'likeCount' as the size of the 'likes' array
+                likeCount: { $size: "$likes" },          // Adds a new field 'likeCount' as the size of the 'likes' array
+                dislikeCount: { $size: "$dislikes" },    // Adds a new field 'dislikeCount' as the size of the 'dislikes' array
             }
         },
         {
             $project: {
-                likes: 0                      // Optionally exclude the 'likes' array to return only the count
+                likes: 0,                             // Optionally exclude the 'likes' array to return only the count
+                dislikes: 0,                          // Optionally exclude the 'dislikes' array to return only the count
             }
         },
         { $sort: { createdAt: -1 } }          // Sort by creation date (most recent first)
@@ -176,11 +189,12 @@ const getAllNews = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(
             200,
-            newsWithLikes,
+            newsWithLikesAndDislikes,
             "News retrieved successfully"
         )
     );
 });
+
 
 
 
