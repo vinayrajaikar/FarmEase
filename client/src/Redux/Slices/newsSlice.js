@@ -16,8 +16,8 @@ export const uploadNews = createAsyncThunk(
 
 export const updateNews = createAsyncThunk(
     "updateNews",
-    async(details)=>{
-        const response = await axiosInstance.post("/news/update-news/:newsId",details);
+    async(newsId)=>{
+        const response = await axiosInstance.post(`/news/update-news/:${newsId}`);
         return response.data;
     }
 );
@@ -106,5 +106,6 @@ const newsSlice = createSlice({
     }
 })
 
+export default newsSlice.reducer
 
 
