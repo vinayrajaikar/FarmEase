@@ -1,84 +1,46 @@
-import { useEffect, useState } from 'react';
-import { useDispatch,useSelector } from 'react-redux';
-import { loginFarmer,getCurrentFarmer } from './Redux/Slices/farmerSlice';
+import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import FarmerRegistration from './Pages/FarmerRegister';
+import SupplierRegistration from './Pages/SupplierRegister';
+import SignIn from './Pages/SignIn';
+import HomePage from './Pages/HomePage';
+import NavBar from './components/ui/NavBar';
+import SupplierDirectory from './Pages/SuppliersPage';
+import NewsPage from './Pages/NewsPage';
+import DiseaseDetector from './Pages/DiseaseDetector';
+import ProfilePage from './Pages/ProfilePage';
 
-const App = () => {
-  const [data, setData] = useState({});
-  const dispatch = useDispatch();
-  const [details,setdetails]=useState({})
-  const farmerDetails = useSelector((state) => state.farmer.farmerDetails);
-      // const farmerDetails = useSelector((state) => state.farmer.farmerDetails);
-    const loading = useSelector((state) => state.farmer.loading);
-    const status = useSelector((state) => state.farmer.status);
-  
-  
-  // Function to log in and fetch user data
-  async function login() {
-    try {
-      const response = await dispatch(
-        loginFarmer({
-          email: 'a@gmail.com',
-          password: '123',
-        })
-      );
-      console.log(response.payload.data.user); // Logs user data
-      return response.payload.data.user; // Return user data
-    } catch (error) {
-      console.error('Error logging in:', error);
-    }
-  }
+function AppContent() {
+  const location = useLocation();
 
-  async function getFarmerDetails() {
-    try {
-      const response = await dispatch(getCurrentFarmer());
-      console.log(response)
-      console.log(response.payload.data); // Logs user data
-      return response.payload.data; // Return user data
-    } catch (error) {
-      console.error('Error logging in:', error);
-    }
-  }
-
-  // useEffect to call the login function and set data
-  useEffect(() => {
-    async function fetchData() {
-      const userData = await login(); // Await resolved data
-      const getdetails = await getFarmerDetails();
-      if (userData) {
-        setData(userData); // Set user data to state
-      }
-      if(getdetails){
-        setdetails(getdetails)
-      }
-    }
-    fetchData();
-  }, []);
-
-
+  // List of routes where NavBar should be hidden
+  const hiddenNavBarRoutes = ['/', '/farmer-registration', '/supplier-registration', '/profile'];
 
   return (
-    <div>
-      <h1>{JSON.stringify(data)}</h1>
-      <h1>{JSON.stringify(details)}</h1>
-      <h3>{JSON.stringify(farmerDetails)}</h3>
-      <h1>Hackerrrr</h1>
+    <div className="App">
+      {/* Conditionally render NavBar */}
+      {!hiddenNavBarRoutes.includes(location.pathname) && <NavBar />}
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/farmer-registration" element={<FarmerRegistration />} />
+        <Route path="/supplier-registration" element={<SupplierRegistration />} />
+        <Route path="/suppliers" element={<SupplierDirectory/>} />
+        <Route path="/news" element={<NewsPage/>} />
+        <Route path="/disease-detection" element={<DiseaseDetector/>} />
+        <Route path="/profile" element={<ProfilePage/>} />
+      </Routes>
     </div>
   );
-};
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+}
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
