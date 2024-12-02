@@ -8,7 +8,7 @@ const extractResponse = (response) => {
   if (response.candidates && response.candidates.length > 0) {
     const candidate = response.candidates[0];
     if (candidate.content && candidate.content.parts) {
-      return candidate.content.parts.map((part) => part.text).join("");  // This should return the crop recommendations string
+      return candidate.content.parts.map((part) => part.text).join(""); // This should return the desired content as a string
     } else {
       return candidate.content || "";
     }
@@ -16,7 +16,7 @@ const extractResponse = (response) => {
   if (response.promptFeedback) {
     throw new Error(`Text not available. ${response.promptFeedback}`);
   }
-  return null;  // Return null if no valid response
+  return null; // Return null if no valid response
 };
 
 const GetCropReccomendations = async () => {
@@ -34,13 +34,12 @@ const GetCropReccomendations = async () => {
   try {
     const result = await model.generateContent(prompt);
     const response = extractResponse(result.response);
-    return response;  // This will return the actual JSON formatted string of crops
+    return response; // This will return the actual JSON formatted string of crops
   } catch (error) {
     console.error("Error generating content:", error);
-    throw error;  // Re-throw error to be handled upstream
+    throw error; // Re-throw error to be handled upstream
   }
 };
-
 
 const GetDiseaseInfo = async (predicted_label) => {
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -65,11 +64,61 @@ Only return the JSON object without any additional text or commentary.
   try {
     const result = await model.generateContent(prompt);
     const response = extractResponse(result.response);
-    return response;  // This will return the actual JSON formatted string of crops
+    return response; // This will return the actual JSON formatted string of crops
   } catch (error) {
     console.error("Error generating content:", error);
-    throw error;  // Re-throw error to be handled upstream
+    throw error; // Re-throw error to be handled upstream
   }
 };
 
-export { GetCropReccomendations, GetDiseaseInfo };
+const GetCropDetails = async (cropName) => {
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const prompt = `Generate a JSON object of the following details for the crop "${cropName}":
+
+{
+  "crop": {
+    "name": "<CropName>",
+    "scientificName": "<Scientific Name>",
+    "growthRequirements": {
+      "climate": "<Climate requirements>",
+      "temperature": "<Temperature range>",
+      "soilType": "<Suitable soil type>",
+      "pHLevel": "<Soil pH range>",
+      "waterRequirement": "<Water needs>"
+    },
+    "plantingDetails": {
+      "sowingSeason": "<Optimal sowing season>",
+      "seedRate": "<Seed rate per hectare>",
+      "spacing": {
+        "rowSpacing": "<Row spacing>",
+        "plantSpacing": "<Plant spacing>"
+      },
+      "propagationMethod": "<Propagation method>"
+    },
+    "fertilizerRequirements": {
+      "nitrogen": "<Nitrogen requirement>",
+      "phosphorus": "<Phosphorus requirement>",
+      "potassium": "<Potassium requirement>"
+    },
+    "pestAndDiseaseManagement": {
+      "commonPests": ["<Pest 1>", "<Pest 2>"],
+      "commonDiseases": ["<Disease 1>", "<Disease 2>"]
+    },
+    "harvestTime": "<Harvest time in days after sowing>",
+    "yieldEstimate": "<Expected yield per hectare>"
+  }
+}
+Do not add any extra comments or text.`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = extractResponse(result.response);
+    return response.replace(/```json|```/g, "").trim(); // Returns the JSON formatted string with crop details
+  } catch (error) {
+    console.error("Error generating crop details:", error);
+    throw error; // Re-throw error to be handled upstream
+  }
+};
+
+
+export { GetCropReccomendations, GetDiseaseInfo, GetCropDetails };

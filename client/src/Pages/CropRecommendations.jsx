@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
 import { GetCropReccomendations } from './GeminiCropAPI';
 
 const trimTextResponse = (text) => {
@@ -40,8 +41,7 @@ const fetchCropImage = async (cropName) => {
 const CropRecommendations = () => {
   const [recommendedCrops, setRecommendedCrops] = useState([]);
   const [cropImages, setCropImages] = useState({}); // State to store images for each crop
-
- 
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const fetchAllCropImages = async (crops) => {
     const images = {};
@@ -50,8 +50,6 @@ const CropRecommendations = () => {
     }
     setCropImages(images); // Single update after fetching all images
   };
-  
-
 
   useEffect(() => {
     const initializeCrops = async () => {
@@ -66,7 +64,11 @@ const CropRecommendations = () => {
     };
     initializeCrops();
   }, []);
-  
+
+  const handleImageClick = (cropNames, imageUrls) => {
+    // Navigate to the CropDetailPage and pass crop name and image as props
+    navigate('/cropdetail', { state: { cropNames, imageUrls } });
+  };
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -76,7 +78,10 @@ const CropRecommendations = () => {
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-5 sm:gap-4">
         {recommendedCrops.map((crop, index) => (
           <div key={index} className="flex flex-col items-center space-y-2">
-            <div className="relative h-16 w-16 overflow-hidden rounded-full sm:h-24 sm:w-24">
+            <div
+              className="relative h-16 w-16 overflow-hidden rounded-full sm:h-24 sm:w-24 cursor-pointer"
+              onClick={() => handleImageClick(crop, cropImages[crop] || "https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg")}
+            >
               <img
                 src={cropImages[crop] || "https://images.pexels.com/photos/265216/pexels-photo-265216.jpeg"} // Use the image URL from state
                 alt={crop}

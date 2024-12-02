@@ -10,6 +10,7 @@ import SupplierDirectory from './Pages/SuppliersPage';
 import NewsPage from './Pages/NewsPage';
 import DiseaseDetector from './Pages/DiseaseDetector';
 import ProfilePage from './Pages/ProfilePage';
+import CropDetails from './Pages/CropDetailPage';
 
 function AppContent() {
   const location = useLocation();
@@ -18,7 +19,7 @@ function AppContent() {
   const hiddenNavBarRoutes = ['/', '/farmer-registration', '/supplier-registration'];
 
   return (
-    <div className="App">
+    <div className="App sm:mx-16">
       {/* Conditionally render NavBar */}
       {!hiddenNavBarRoutes.includes(location.pathname) && <NavBar />}
       <Routes>
@@ -30,6 +31,7 @@ function AppContent() {
         <Route path="/news" element={<NewsPage/>} />
         <Route path="/disease-detection" element={<DiseaseDetector/>} />
         <Route path="/profile" element={<ProfilePage/>} />
+        <Route path="/cropdetail" element={<CropDetails/>} />
       </Routes>
     </div>
   );
