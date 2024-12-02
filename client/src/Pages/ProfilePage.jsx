@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
 import { Edit2 } from "lucide-react";
 
 const UserProfile = () => {
@@ -53,12 +52,7 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
     <div className="justify-start">
-              <Link
-                to="/home"
-                className=" px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                ← Go Back to Home
-              </Link>
+              
             </div>
       <div className="max-w-4xl mx-auto bg-white rounded-xl overflow-hidden">
         <div className="md:flex">
