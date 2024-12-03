@@ -1,23 +1,26 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Edit2 } from "lucide-react";
+import {useDispatch, useSelector} from "react-redux";
+import { getCurrentFarmer, updateFarmerAccount } from "../Redux/Slices/farmerSlice";
 
 const UserProfile = () => {
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    name: "John Doe",
-    email: "johndoe@example.com",
-    phone: "5551234567",
-    address: "belgaum",
-    password: "Password",
-    userType: "farmer",
-    supplyType: "Organic Produce",
-    description: "We specialize in delivering fresh, organic produce directly from our farm to your table.",
-    avatar: "https://github.com/shadcn.png",
-  });
+  const [userData, setUserData] = useState({});
   const [avatarFile, setAvatarFile] = useState(null);
   const fileInputRef = useRef(null);
+  async function FetchFarmerDetails(){
+    const response = await dispatch(getCurrentFarmer());
+    // console.log(response.payload.data);
+    setUserData(response.payload.data);
+  }
 
-  const handleAvatarChange = (e) => {
+  useEffect(() => {
+    FetchFarmerDetails();
+    // console.log("Hello")
+  }, [userData])
+
+const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -32,20 +35,30 @@ const UserProfile = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+const  handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Updated user data:", userData);
-    console.log("Avatar file to upload:", avatarFile);
+    const response =await dispatch(updateFarmerAccount(
+      {
+        username: userData.username,
+        fullName: userData.fullName,
+        email: userData.email,
+        contactNumber: userData.contactNumber,
+        area: userData.area,}
+    ));
+    // console.log("Updated user data:", userData);
+    // console.log("Avatar file to upload:", avatarFile);
+    // console.log(userData);
     setIsEditing(false);
   };
 
   const supplyCategories = ["Seeds", "Fertilizers"];
 
   const handleChange = (e) => {
+    // console.log(e.target.value);
     const { name, value } = e.target;
     setUserData((prevData) => ({
       ...prevData,
-      [name]: name === "phone" ? value.replace(/\D/g, "") : value, // Restrict phone to numbers only
+      [name]: name === "contactNumber" ? value.replace(/\D/g, "") : value, // Restrict contactNumber to numbers only
     }));
   };
 
@@ -60,8 +73,8 @@ const UserProfile = () => {
             <div className="h-48 w-full md:h-full md:w-48 flex items-center justify-center relative">
               <img
                 className="h-32 w-32 rounded-full object-cover border-4 border-white"
-                src={userData.avatar}
-                alt={userData.name}
+                src={userData.coverImage}
+                alt={userData.coverImage}
                 onClick={isEditing ? () => fileInputRef.current.click() : () => {}}
               />
               <input
@@ -75,7 +88,7 @@ const UserProfile = () => {
           </div>
           <div className="p-8 w-full">
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-bold text-gray-900">{userData.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{userData.username}</h1>
               <button
                 onClick={() => setIsEditing(!isEditing)}
                 className="flex items-center bg-transparent text-gray-500"
@@ -92,8 +105,8 @@ const UserProfile = () => {
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    value={userData.name}
+                    name="fullName"
+                    value={userData.fullName|| ""}
                     onChange={handleChange}
                     disabled={!isEditing}
                     className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
@@ -106,7 +119,7 @@ const UserProfile = () => {
                   <input
                     type="email"
                     name="email"
-                    value={userData.email}
+                    value={userData.email || ""}
                     onChange={handleChange}
                     disabled={!isEditing}
                     className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
@@ -114,44 +127,46 @@ const UserProfile = () => {
                 </div>
                 <div>
                   <label className="block text-sm text-left font-medium text-gray-700">
-                    Phone Number
+                    Contact Number
                   </label>
                   <input
                     type="tel"
-                    name="phone"
-                    value={userData.phone}
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                    className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-left font-medium text-gray-700">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={userData.address}
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                    className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-left font-medium text-gray-700">
-                    Password
-                  </label>
-                  <input
-                    type="text"
-                    name="password"
-                    value={userData.password}
+                    name="contactNumber"
+                    value={userData.contactNumber || ""}
                     onChange={handleChange}
                     disabled={!isEditing}
                     className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm text-left font-medium text-gray-700">
+                    User Name
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={userData.username || ""}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                    className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-left font-medium text-gray-700">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    name="area"
+                    value={userData.area || ""}
+                    onChange={handleChange}
+                    disabled={!isEditing}
+                    className="w-full bg-gray-100 border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent py-4 px-4 my-2"
+                  />
+                </div>
+               
                 {userData.userType === "supplier" && (
                   <>
                     <div>
@@ -191,6 +206,7 @@ const UserProfile = () => {
                   </>
                 )}
               </div>
+
               {isEditing && (
                 <div className="mt-6 flex justify-end">
                   <button
