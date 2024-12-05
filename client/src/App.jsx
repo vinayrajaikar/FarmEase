@@ -23,8 +23,11 @@ function AppContent() {
       {/* Conditionally render NavBar */}
       {!hiddenNavBarRoutes.includes(location.pathname) && <NavBar />}
       <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/home" element={<HomePage />} />
+        {/* <Auth allowedroles={['farmer', 'supplier']}> */}
+          <Route path="/" element={<SignIn />} />
+          <Route path="/home" element={<HomePage />} />
+        {/* </Auth> */}
+
         <Route path="/farmer-registration" element={<FarmerRegistration />} />
         <Route path="/supplier-registration" element={<SupplierRegistration />} />
         <Route path="/suppliers" element={<SupplierDirectory/>} />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginFarmer } from '../Redux/Slices/farmerSlice';
+import { loginSupplier } from '../Redux/Slices/supplierSlice';
 
 const InputField = ({ label, name, type = "text", placeholder, value, onChange, className = "" }) => (
   <div className={`relative ${className}`}>
@@ -34,29 +35,51 @@ export default function SignIn() {
   const dispatch = useDispatch();
 
   const loading = useSelector((state) => state.farmer.loading);
-  const farmerDetails = useSelector((state) => state.farmer.farmerDetails);
+  // const farmerDetails = useSelector((state) => state.farmer.farmerDetails);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
-      const response = await dispatch(
+      let response;
+  
+      // Try logging in as a farmer
+      response = await dispatch(
         loginFarmer({
           email: formData.email,
           password: formData.password,
         })
       );
-      if (response.payload?.data?.user) {
-        console.log('Logged in:', response.payload.data.user);
-        navigate('/home');
-      } else {
-        setError('Invalid email or password');
+  
+      if (response.payload?.data?.user.role === "farmer") {
+        console.log("Logged in as Farmer:", response.payload.data.user);
+        navigate("/home");
+        return;
       }
+  
+      // If not a farmer, try logging in as a supplier
+      response = await dispatch(
+        loginSupplier({
+          email: formData.email,
+          password: formData.password,
+        })
+      );
+      console.log(response.payload.data.role);
+  
+      if (response.payload?.data?.role === "supplier") {
+        console.log("Logged in as Supplier:", response.payload.data);
+        navigate("/suppliers");
+        return;
+      }
+  
+      // If neither role is valid
+      setError("Invalid email or password");
     } catch (error) {
-      console.error('Error logging in:', error);
-      setError('Something went wrong. Please try again.');
+      console.error("Error logging in:", error);
+      setError("Something went wrong. Please try again.");
     }
   };
-
+  
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,

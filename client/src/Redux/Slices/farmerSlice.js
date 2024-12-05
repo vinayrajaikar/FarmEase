@@ -3,7 +3,8 @@ import axiosInstance from "../../utils/axiosInstance"
 const initialState ={
     farmerDetails:null,
     loading:false,
-    status:false
+    status:false,
+    role:""
 }
 
 export const registerFarmer = createAsyncThunk(
@@ -87,9 +88,13 @@ const farmerSlice = createSlice({
             state.loading = true;
         })
         .addCase(loginFarmer.fulfilled,(state,action)=>{
-            state.farmerDetails = action.payload;
+            // console.log(action.payload.data.user);
+            state.farmerDetails = action.payload.data.user.data;
             state.loading = false;
             state.status = true;
+            state.role = action.payload.data.user.role;
+            // console.log(JSON.parse(JSON.stringify(state)))
+        
         })
         .addCase(loginFarmer.rejected, (state)=>{
             state.loading = false;
@@ -105,6 +110,7 @@ const farmerSlice = createSlice({
             state.farmerDetails=action.payload;
             state.loading = false;
             state.status = true;
+            state.role = "";
         })
         .addCase(logoutFarmer.rejected, (state)=>{
             state.farmerDetails=null;

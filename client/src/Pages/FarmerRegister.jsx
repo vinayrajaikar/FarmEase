@@ -160,7 +160,7 @@ export default function FarmerRegistration() {
                 name="username"
                 placeholder="Minimum four characters"
                 minLength={4}
-                value={formData.userName}
+                value={formData.username}
                 onChange={handleChange}
               />
               <InputField
