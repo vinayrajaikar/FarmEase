@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Edit2 } from "lucide-react";
 import {useDispatch, useSelector} from "react-redux";
-import { getCurrentFarmer, updateFarmerAccount } from "../Redux/Slices/farmerSlice";
+import { getCurrentFarmer, updateFarmerAccount, updateFarmerCoverImage  } from "../Redux/Slices/farmerSlice";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({});
-  const [avatarFile, setAvatarFile] = useState(null);
+  const [coverImage, setcoverImage] = useState(null);
   const fileInputRef = useRef(null);
   async function FetchFarmerDetails(){
     const response = await dispatch(getCurrentFarmer());
@@ -20,36 +20,38 @@ const UserProfile = () => {
     // console.log("Hello")
   }, [userData])
 
-const handleAvatarChange = (e) => {
+  const handleCoverImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserData((prevData) => ({
-          ...prevData,
-          avatar: reader.result,
-        }));
-        setAvatarFile(file);
-      };
-      reader.readAsDataURL(file);
+      const formData = new FormData();
+      formData.append("coverImage", file); // Match this key with your backend's expected field name
+  
+      try {
+        const response = await dispatch(updateFarmerCoverImage(formData));
+        console.log(response)
+        console.log("Upload successful:", response);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
+  
 
-const  handleSubmit = async(e) => {
-    e.preventDefault();
-    const response =await dispatch(updateFarmerAccount(
-      {
-        username: userData.username,
-        fullName: userData.fullName,
-        email: userData.email,
-        contactNumber: userData.contactNumber,
-        area: userData.area,}
-    ));
-    // console.log("Updated user data:", userData);
-    // console.log("Avatar file to upload:", avatarFile);
-    // console.log(userData);
-    setIsEditing(false);
-  };
+  const  handleSubmit = async(e) => {
+      e.preventDefault();
+      const response =await dispatch(updateFarmerAccount(
+        {
+          username: userData.username,
+          fullName: userData.fullName,
+          email: userData.email,
+          contactNumber: userData.contactNumber,
+          area: userData.area,}
+      ));
+      // console.log("Updated user data:", userData);
+      // console.log("Avatar file to upload:", avatarFile);
+      // console.log(userData);
+      setIsEditing(false);
+    };
 
   const supplyCategories = ["Seeds", "Fertilizers"];
 
@@ -80,7 +82,7 @@ const  handleSubmit = async(e) => {
               <input
                 type="file"
                 ref={fileInputRef}
-                onChange={handleAvatarChange}
+                onChange={handleCoverImageChange}
                 className="hidden"
                 accept="image/*"
               />

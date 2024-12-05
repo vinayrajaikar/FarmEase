@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from 'react-router-dom';
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { registerSupplier } from "../Redux/Slices/supplierSlice";
 const InputField = ({ label, name, type = "text", placeholder, minLength, value, onChange, className = "" }) => (
   <div className={`relative ${className}`}>
     <input
@@ -70,22 +70,37 @@ const TextAreaField = ({ label, name, placeholder, value, onChange, className = 
 );
 
 export default function SupplierRegistration() {
+
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    userName: '',
+    username: '',
     email: '',
     fullName: '',
     contactNumber: '',
-    pincode: '',
+    area: '',
     password: '',
     supplyCategory: '',
-    description: ''
+    description: '',
+    coverImage:''
   });
-  const [avatarSrc, setAvatarSrc] = useState('/placeholder.svg');
+  const [coverImage, setcoverImage] = useState('/placeholder.svg');
   const fileInputRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
+
+    dispatch(registerSupplier(formData))
+      .unwrap()
+      .then(() => {
+        alert("Supplier registered successfully!");
+        navigate("/"); // Redirect after successful registration
+      })
+      .catch((error) => {
+        console.error("Error registering Supplier:", error);
+        alert("Registration failed. Please try again.");
+      });
+
   };
 
   const handleChange = (e) => {
@@ -114,9 +129,10 @@ export default function SupplierRegistration() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    console.log(file);
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => setAvatarSrc(e.target.result);
+      reader.onload = (e) => setcoverImage(e.target.result);
       reader.readAsDataURL(file);
     }
   };
@@ -140,7 +156,7 @@ export default function SupplierRegistration() {
               <div className="w-full h-full rounded-full overflow-hidden">
               <Avatar className="relative inline-block w-24 h-24">
               <AvatarImage
-                src={avatarSrc || "https://github.com/shadcn.png"}
+                src={coverImage || "https://github.com/shadcn.png"}
                 alt="Profile picture"
                 className="w-full h-full object-cover rounded-full"
               />
@@ -164,10 +180,10 @@ export default function SupplierRegistration() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <InputField
               label="User Name"
-              name="userName"
+              name="username"
               placeholder="Minimum four characters"
               minLength={4}
-              value={formData.userName}
+              value={formData.username}
               onChange={handleChange}
             />
             <InputField
@@ -200,13 +216,13 @@ export default function SupplierRegistration() {
             />
             <div className="relative">
               <input
-                id="pincode"
-                name="pincode"
+                id="area"
+                name="area"
                 type="text"
                 className="w-full px-6 py-2 text-xs bg-green-500 text-white border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent pt-7 placeholder-white placeholder-opacity-80"
                 placeholder="Required field"
                 required
-                value={formData.pincode}
+                value={formData.area}
                 onChange={handleChange}
               />
               <label

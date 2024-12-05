@@ -3,7 +3,8 @@ import axiosInstance from "../../utils/axiosInstance"
 const initialState ={
     supplierDetails:null,
     loading:false,
-    status:false
+    status:false,
+    role:""
 }
 
 export const registerSupplier = createAsyncThunk(
@@ -90,6 +91,8 @@ const supplierSlice = createSlice({
             state.supplierDetails = action.payload;
             state.loading = false;
             state.status = true;
+            state.role = action.payload.role;
+            console.log(state.role);
         })
         .addCase(loginSupplier.rejected, (state)=>{
             state.loading = false;
@@ -105,6 +108,7 @@ const supplierSlice = createSlice({
             state.supplierDetails=action.payload;
             state.loading = false;
             state.status = true;
+            state.role = "";
         })
         .addCase(logoutSupplier.rejected, (state)=>{
             state.supplierDetails=null;
