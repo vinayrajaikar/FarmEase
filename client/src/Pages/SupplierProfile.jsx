@@ -32,6 +32,8 @@ const SupplierProfile = () => {
   const handleCancel = () => {
     setIsEditing(false);
     // Reset any unsaved changes
+    //Handles Cancel while editing
+    
   };
 
   const handleChange = (e) => {
