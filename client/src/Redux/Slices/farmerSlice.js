@@ -107,7 +107,7 @@ const farmerSlice = createSlice({
             state.loading = true;
         })
         .addCase(logoutFarmer.fulfilled, (state,action)=>{
-            state.farmerDetails=action.payload;
+            state.farmerDetails=null;
             state.loading = false;
             state.status = true;
             state.role = "";
