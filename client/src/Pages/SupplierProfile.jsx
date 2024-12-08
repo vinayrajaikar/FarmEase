@@ -30,7 +30,7 @@ const SupplierProfile = () => {
 
   const handleSave = async() => {
     const res=await dispatch(updateSupplierAccount(supplierProfile));
-    // console.log(res);
+    console.log(res);
     setIsEditing(false);
     
 
