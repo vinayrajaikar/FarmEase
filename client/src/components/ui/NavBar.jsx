@@ -1,21 +1,25 @@
-import React from 'react';
-import { Menu, Search, User } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import Link and useLocation
+import React from "react";
+import { Menu, Search, User, LogOut } from "lucide-react"; // Import LogOut icon
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./button.jsx";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "./sheet.jsx";
-import FarmEaseLogo from '../../utils/FarmEaseLogo.png';
+import FarmEaseLogo from "../../utils/FarmEaseLogo.png";
 
 const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    navigate('/profile'); // Replace '/profile' with your desired route
-};
+    navigate("/profile"); // Replace '/profile' with your desired route
+  };
+
+  const handleLogout = () => {
+    navigate("/"); // Redirect to '/' route
+  };
 
   const NavItems = () => {
     const navLinks = [
@@ -48,9 +52,13 @@ const NavBar = () => {
     <nav className="border-b">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
+          {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" className="px-0 w-8 bg-emerald-300 text-base hover:bg-transparent focus:ring-0 lg:hidden">
+              <Button
+                variant="ghost"
+                className="px-0 w-8 bg-emerald-300 text-base hover:bg-transparent focus:ring-0 lg:hidden"
+              >
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
@@ -58,19 +66,31 @@ const NavBar = () => {
             <SheetContent side="left" className="w-[280px]">
               <nav className="flex flex-col space-y-1 pt-4">
                 <NavItems />
+                <Button
+                  variant="ghost"
+                  className="mt-4 flex items-center gap-2 text-red-600"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-5 w-5" />
+                  Logout
+                </Button>
               </nav>
             </SheetContent>
           </Sheet>
-          
+
+          {/* Desktop Menu */}
           <div className="hidden lg:flex lg:gap-6">
             <NavItems />
           </div>
-          
+
+          {/* Logo */}
           <div className="flex flex-1 justify-center">
             <img src={FarmEaseLogo} alt="FarmEase" className="h-10 w-auto sm:h-16" />
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4">
+          {/* Right Actions */}
+          <div className="hidden lg:flex items-center gap-2 sm:gap-4">
+            {/* Search */}
             <div className="relative hidden md:block">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
               <input
@@ -79,9 +99,27 @@ const NavBar = () => {
                 className="w-[160px] rounded-md border border-gray-300 py-2 pl-8 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00CBA9] sm:w-[200px] bg-transparent"
               />
             </div>
-            <Button size="icon" variant="ghost" className="h-9 w-9 bg-emerald-300" onClick={handleProfileClick}>
+
+            {/* Profile */}
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-9 w-9 bg-emerald-300"
+              onClick={handleProfileClick}
+            >
               <User className="h-5 w-5" />
               <span className="sr-only">User account</span>
+            </Button>
+
+            {/* Logout */}
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-9 w-9 bg-red-500 text-white hover:bg-red-600"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-5 w-5" />
+              <span className="sr-only">Logout</span>
             </Button>
           </div>
         </div>
