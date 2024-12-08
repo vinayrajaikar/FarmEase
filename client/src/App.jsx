@@ -12,17 +12,22 @@ import DiseaseDetector from './Pages/DiseaseDetector';
 import ProfilePage from './Pages/ProfilePage';
 import CropDetails from './Pages/CropDetailPage';
 import FarmerListing from './Pages/FarmerListing';
+import SupplierNavBar from './components/ui/SupplierNavBar';
+import SupplierProfile from './Pages/SupplierProfile';
 
 function AppContent() {
   const location = useLocation();
 
   // List of routes where NavBar should be hidden
-  const hiddenNavBarRoutes = ['/', '/farmer-registration', '/supplier-registration'];
+  const hiddenNavBarRoutes = ['/', '/farmer-registration', '/supplier-registration','/supplier-home','/supplier-profile'];
+
+  const supplierRoutes = ['/supplier-home','/supplier-profile'];
 
   return (
     <div className="App sm:mx-16">
       {/* Conditionally render NavBar */}
       {!hiddenNavBarRoutes.includes(location.pathname) && <NavBar />}
+      {supplierRoutes.includes(location.pathname) && <SupplierNavBar />}
       <Routes>
         {/* <Auth allowedroles={['farmer', 'supplier']}> */}
           <Route path="/" element={<SignIn />} />
@@ -37,6 +42,8 @@ function AppContent() {
         <Route path="/disease-detection" element={<DiseaseDetector/>} />
         <Route path="/profile" element={<ProfilePage/>} />
         <Route path="/cropdetail" element={<CropDetails/>} />
+        <Route path="/supplier-home" element={<FarmerListing/>} />
+        <Route path="/supplier-profile" element={<SupplierProfile/>} />
       </Routes>
     </div>
   );
