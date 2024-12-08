@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "./sheet.jsx";
+import FarmEaseLogo from '../../utils/FarmEaseLogo.png';
 
 const NavBar = () => {
   const location = useLocation();
@@ -66,7 +67,7 @@ const NavBar = () => {
           </div>
           
           <div className="flex flex-1 justify-center">
-            <img src="/placeholder.svg?height=40&width=100" alt="Logo" className="h-8 w-auto sm:h-10" />
+            <img src={FarmEaseLogo} alt="FarmEase" className="h-10 w-auto sm:h-16" />
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
