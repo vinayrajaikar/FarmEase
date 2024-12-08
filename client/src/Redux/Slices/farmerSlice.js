@@ -63,6 +63,14 @@ export const updateFarmerCoverImage = createAsyncThunk(
     }
 )
 
+export const getAllSuppliers = createAsyncThunk(
+    "getAllSuppliers",
+    async()=>{
+        const response = await axiosInstance.get("/farmer/get-all-suppliers");
+        return response.data;
+    }
+)
+
 const farmerSlice = createSlice({
     name:"farmer",
     initialState,

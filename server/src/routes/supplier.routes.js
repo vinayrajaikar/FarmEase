@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { registerSupplier,loginSupplier, logoutSupplier, supplier_refreshAccessToken, supplier_getCurrentUser, supplier_updateAccountDetails, updateSupplierPassword, updateSupplierCoverImage } from "../controllers/supplier.controller.js";
+import { registerSupplier,loginSupplier, logoutSupplier, supplier_refreshAccessToken, supplier_getCurrentUser, supplier_updateAccountDetails, updateSupplierPassword, updateSupplierCoverImage, getAllFarmers } from "../controllers/supplier.controller.js";
 
 const router= Router();
 
@@ -26,5 +26,6 @@ router.route("/supplier-current-user").get(verifyJWT, supplier_getCurrentUser)
 router.route("/supplier-update-account-details").post(verifyJWT, supplier_updateAccountDetails)
 router.route("/supplier-update-coverimage").patch(verifyJWT, upload.single("coverImage"), updateSupplierCoverImage)
 router.route("/supplier-update-password").post(verifyJWT, updateSupplierPassword)
+router.route("/get-all-farmers").get(verifyJWT, getAllFarmers)
 
 export default router

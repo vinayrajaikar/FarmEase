@@ -63,6 +63,15 @@ export const updateSupplierCoverImage = createAsyncThunk(
     }
 )
 
+export const getAllFarmers = createAsyncThunk(
+    "getAllFarmers",
+    async()=>{
+        const response = await axiosInstance.get("/supplier/get-all-farmers");
+        console.log(response);
+        return response.data;
+    }
+)
+
 const supplierSlice = createSlice({
     name:"supplier",
     initialState,
@@ -175,6 +184,22 @@ const supplierSlice = createSlice({
             state.loading=false;
             state.status=false;
         })
+
+        builder
+        .addCase(getAllFarmers.pending, (state)=>{
+            state.loading = true;
+        })
+        .addCase(getAllFarmers.fulfilled, (state,action)=>{
+            state.supplierDetails=action.payload;
+            state.loading = false;
+            state.status = true;
+        })
+        .addCase(getAllFarmers.rejected, (state)=>{
+            state.supplierDetails=null;
+            state.loading=false;
+            state.status=false;
+        })
+
     }
 });
 

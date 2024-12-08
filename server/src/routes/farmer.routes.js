@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerFarmer,loginFarmer, logoutFarmer, farmer_refreshAccessToken,farmer_getCurrentUser,farmer_updateAccountDetails,updateFarmerCoverImage, updateFarmerPassword} from "../controllers/farmer.controller.js";
+import { registerFarmer,loginFarmer, logoutFarmer, farmer_refreshAccessToken,farmer_getCurrentUser,farmer_updateAccountDetails,updateFarmerCoverImage, updateFarmerPassword, getAllSuppliers} from "../controllers/farmer.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -30,6 +30,8 @@ router.route("/farmer-current-user").get(verifyJWT,farmer_getCurrentUser)
 router.route("/farmer-update-account-details").post(verifyJWT, farmer_updateAccountDetails)
 router.route("/update-farmer-cover-image").patch(verifyJWT, upload.single("coverImage"),updateFarmerCoverImage)
 router.route("/update-farmer-password").patch(verifyJWT, updateFarmerPassword)
+router.route("/get-all-suppliers").get(verifyJWT, getAllSuppliers)
+
 
 export default router
 
