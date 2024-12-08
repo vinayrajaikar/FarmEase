@@ -12,13 +12,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone, Mail, MapPin, Tag } from "lucide-react";
 import { getAllSuppliers } from "../Redux/Slices/farmerSlice";
 import { useDispatch } from "react-redux";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function SupplierDirectory() {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  // Make `suppliers` a state variable
   const [suppliers, setSuppliers] = useState([]);
-
   const [filteredSuppliers, setFilteredSuppliers] = useState(suppliers);
   const [locationFilter, setLocationFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -37,7 +38,7 @@ function SupplierDirectory() {
     const response = await dispatch(getAllSuppliers());
     if (response.payload) {
       setSuppliers(response.payload);
-      setFilteredSuppliers(response.payload); 
+      setFilteredSuppliers(response.payload);
     }
     console.log(response.payload);
   };
@@ -45,6 +46,10 @@ function SupplierDirectory() {
   useEffect(() => {
     fetchAllSuppliers();
   }, []);
+
+  const inspectFn = (supplierId) => {
+    navigate(`/supplier-inspection`, { state: { supplierId } });
+  };
 
   return (
     <div className="container mx-auto p-4 space-y-8">
@@ -98,41 +103,47 @@ function SupplierDirectory() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredSuppliers.map((supplier) => (
-          <Card
-            key={supplier.id}
-            className="overflow-hidden transition-shadow duration-300 hover:shadow-lg"
-          >
-            <CardHeader className="bg-[#6EE7B7]/10 border-b border-[#6EE7B7]">
-              <CardTitle className="text-xl text-gray-800">
-                {supplier.username}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-center space-x-2 text-sm">
-                <Tag className="h-4 w-4 text-gray-500" />
-                <span className="font-medium text-gray-700">
-                  Type: {supplier.supplyCategory}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <MapPin className="h-4 w-4 text-gray-500" />
-                <span className="text-gray-600">{supplier.area}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <Phone className="h-4 w-4 text-gray-500" />
-                <span className="text-gray-600">{supplier.contactNumber}</span>
-              </div>
-              <div className="flex items-center space-x-2 text-sm">
-                <Mail className="h-4 w-4 text-gray-500" />
-                <a
-                  href={`mailto:${supplier.email}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {supplier.email}
-                </a>
-              </div>
-            </CardContent>
-          </Card>
+          <div key={supplier.id} onClick={() => inspectFn(supplier.id)}>
+            <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg cursor-pointer">
+              <CardHeader className="bg-[#6EE7B7]/10 flex-row border-b border-[#6EE7B7]">
+                <Avatar>
+                  <AvatarImage
+                    src={supplier.coverImage || "/placeholder-avatar.png"}
+                    alt={supplier.username}
+                  />
+                  <AvatarFallback>{supplier.username[0]}</AvatarFallback>
+                </Avatar>
+                <CardTitle className="text-xl text-gray-800 ml-2">
+                  {supplier.username}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-center space-x-2 text-sm">
+                  <Tag className="h-4 w-4 text-gray-500" />
+                  <span className="font-medium text-gray-700">
+                    Type: {supplier.supplyCategory}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <MapPin className="h-4 w-4 text-gray-500" />
+                  <span className="text-gray-600">{supplier.area}</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <Phone className="h-4 w-4 text-gray-500" />
+                  <span className="text-gray-600">{supplier.contactNumber}</span>
+                </div>
+                <div className="flex items-center space-x-2 text-sm">
+                  <Mail className="h-4 w-4 text-gray-500" />
+                  <a
+                    href={`mailto:${supplier.email}`}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {supplier.email}
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         ))}
       </div>
     </div>

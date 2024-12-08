@@ -14,6 +14,7 @@ import CropDetails from './Pages/CropDetailPage';
 import FarmerListing from './Pages/FarmerListing';
 import SupplierNavBar from './components/ui/SupplierNavBar';
 import SupplierProfile from './Pages/SupplierProfile';
+import SupplierInspection from './Pages/SupplierInspection';
 
 function AppContent() {
   const location = useLocation();
@@ -44,6 +45,7 @@ function AppContent() {
         <Route path="/cropdetail" element={<CropDetails/>} />
         <Route path="/supplier-home" element={<FarmerListing/>} />
         <Route path="/supplier-profile" element={<SupplierProfile/>} />
+        <Route path="/supplier-inspection" element={<SupplierInspection/>} />
       </Routes>
     </div>
   );
