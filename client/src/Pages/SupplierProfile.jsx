@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Edit, Save, X, User, MapPin, Phone, Mail, Package, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,38 +7,54 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { useDispatch } from 'react-redux';
+import {getCurrentSupplier,updateSupplierAccount} from "../Redux/Slices/supplierSlice"
+
 
 const SupplierProfile = () => {
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [supplierProfile, setSupplierProfile] = useState({
-    username: "green_supplier",
-    fullName: "Green Grow Supplies",
-    location: "California",
-    phone: "+1 123-456-7890",
-    email: "contact@greengrow.com",
-    supplyCategory: "Seeds and Fertilizers",
-    description: "We provide high-quality seeds and fertilizers for all your farming needs. Our products are sourced from the best manufacturers and are designed to improve crop yield and quality. With years of experience in the agricultural industry, we understand the unique needs of farmers and strive to offer personalized solutions."
+    username: "",
+    fullName: "",
+    area: "",
+    contactNumber: "",
+    email: "",
+    supplyCategory: "",
+    description: ""
   });
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
+    const res=await dispatch(updateSupplierAccount(supplierProfile));
+    // console.log(res);
     setIsEditing(false);
-    // Here you would typically send the updated profile to your backend
+    
+
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset any unsaved changes
-    //Handles Cancel while editing
-    
   };
+
+  const fetchSupplierProfile = async () => {
+    const response = await dispatch(getCurrentSupplier());
+    // console.log();
+    setSupplierProfile(response.payload.data)
+  }
+
+  useEffect(() => {
+    fetchSupplierProfile();
+  },[])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(e.target.value)
     setSupplierProfile(prev => ({ ...prev, [name]: value }));
+    console.log(supplierProfile)
   };
 
   return (
@@ -79,16 +95,16 @@ const SupplierProfile = () => {
                   placeholder="Full Name"
                 />
                 <Input
-                  name="location"
-                  value={supplierProfile.location}
+                  name="area"
+                  value={supplierProfile.area}
                   onChange={handleChange}
-                  placeholder="Location"
+                  placeholder="Area"
                 />
                 <Input
-                  name="phone"
-                  value={supplierProfile.phone}
+                  name="contactNumber"
+                  value={supplierProfile.contactNumber}
                   onChange={handleChange}
-                  placeholder="Phone Number"
+                  placeholder="ContactNumber"
                 />
                 <Input
                   name="email"
@@ -97,22 +113,23 @@ const SupplierProfile = () => {
                   placeholder="Email"
                   type="email"
                 />
-                <Select 
-                  name="supplyCategory"
-                  value={supplierProfile.supplyCategory} 
-                  onValueChange={(value) => handleChange({ target: { name: 'supplyCategory', value } })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select supply category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Seeds">Seeds</SelectItem>
-                    <SelectItem value="Fertilizers">Fertilizers</SelectItem>
-                    <SelectItem value="Pesticides">Pesticides</SelectItem>
-                    <SelectItem value="Farm Equipment">Farm Equipment</SelectItem>
-                    <SelectItem value="Seeds and Fertilizers">Seeds and Fertilizers</SelectItem>
-                  </SelectContent>
-                </Select>
+              <Select 
+                onValueChange={(value) => 
+                  setSupplierProfile((prev) => ({ ...prev, supplyCategory: value }))
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select supply category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Seeds">Seeds</SelectItem>
+                  <SelectItem value="Fertilizers">Fertilizers</SelectItem>
+                  <SelectItem value="Pesticides">Pesticides</SelectItem>
+                  <SelectItem value="Farm Equipment">Farm Equipment</SelectItem>
+                  <SelectItem value="Seeds and Fertilizers">Seeds and Fertilizers</SelectItem>
+                </SelectContent>
+              </Select>
+
               </div>
               <Textarea
                 name="description"
@@ -130,8 +147,8 @@ const SupplierProfile = () => {
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InfoItem icon={<User />} label="Username" value={supplierProfile.username} />
-                <InfoItem icon={<MapPin />} label="Location" value={supplierProfile.location} />
-                <InfoItem icon={<Phone />} label="Phone" value={supplierProfile.phone} />
+                <InfoItem icon={<MapPin />} label="Area" value={supplierProfile.area} />
+                <InfoItem icon={<Phone />} label="ContactNumber" value={supplierProfile.contactNumber} />
                 <InfoItem icon={<Mail />} label="Email" value={supplierProfile.email} />
                 <InfoItem icon={<Package />} label="Supply Category" value={supplierProfile.supplyCategory} />
               </div>

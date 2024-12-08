@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, User, MapPin, Phone, Mail, ChevronDown } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,27 +10,35 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu"
+import { useDispatch } from 'react-redux';
+import axiosInstance from '@/utils/axiosInstance';
 
 const FarmerListing = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('fullName');
+  const dispatch=useDispatch();
 
-  // Mock data for demonstration
-  const farmers = [
-    { id: 1, name: "John Doe", location: "Midwest", email: "john@example.com", phone: "+1 234-567-8901" },
-    { id: 2, name: "Jane Smith", location: "California", email: "jane@example.com", phone: "+1 345-678-9012" },
-    { id: 3, name: "Bob Johnson", location: "Texas", email: "bob@example.com", phone: "+1 456-789-0123" },
-    { id: 4, name: "Alice Brown", location: "Oregon", email: "alice@example.com", phone: "+1 567-890-1234" },
-    { id: 5, name: "Charlie Davis", location: "Florida", email: "charlie@example.com", phone: "+1 678-901-2345" },
-    { id: 6, name: "Eva Wilson", location: "New York", email: "eva@example.com", phone: "+1 789-012-3456" },
-  ];
+  // Mock data for demonstration (replaced with new structure)
+ 
+  
+  const [farmers, setFarmers] = useState([]);
 
   const filteredFarmers = farmers
-    .filter(farmer => 
-      farmer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      farmer.location.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(farmer =>
+      farmer.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      farmer.area.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
+
+  const getAllFarmer=async()=>{
+    const response = await axiosInstance.get("/supplier/get-all-farmers");
+    console.log(response.data.data);
+    setFarmers(response.data.data);
+  }
+
+  useEffect(() => {
+    getAllFarmer();
+  },[])
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -58,8 +66,8 @@ const FarmerListing = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setSortBy('name')}>Name</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortBy('location')}>Location</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortBy('fullName')}>Full Name</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortBy('area')}>Area</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -68,21 +76,21 @@ const FarmerListing = () => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredFarmers.map(farmer => (
-          <Card key={farmer.id} className="overflow-hidden">
+          <Card key={farmer._id} className="overflow-hidden">
             <CardHeader className="bg-teal-300 text-white p-4">
               <div className="flex items-center space-x-4">
                 <Avatar className="h-12 w-12 border-2 border-white">
-                  <AvatarImage src={`/placeholder.svg?height=48&width=48&text=${farmer.name.charAt(0)}`} alt={farmer.name} />
-                  <AvatarFallback>{farmer.name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src={farmer.coverImage || `/placeholder.svg?height=48&width=48&text=${farmer.fullName.charAt(0)}`} alt={farmer.fullName} />
+                  <AvatarFallback>{farmer.fullName.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <CardTitle>{farmer.name}</CardTitle>
+                <CardTitle>{farmer.fullName}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-4">
               <div className="space-y-2">
-                <InfoItem icon={<MapPin />} label="Location" value={farmer.location} />
+                <InfoItem icon={<MapPin />} label="Area" value={farmer.area} />
                 <InfoItem icon={<Mail />} label="Email" value={farmer.email} />
-                <InfoItem icon={<Phone />} label="Phone" value={farmer.phone} />
+                <InfoItem icon={<Phone />} label="Phone" value={farmer.contactNumber} />
               </div>
             </CardContent>
           </Card>
@@ -103,4 +111,3 @@ const InfoItem = ({ icon, label, value }) => (
 );
 
 export default FarmerListing;
-

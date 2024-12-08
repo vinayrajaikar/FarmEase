@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Supplier } from "../models/supplier.model.js";
+import { Farmer } from "../models/farmer.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
@@ -338,6 +339,13 @@ const updateSupplierPassword = asyncHandler(async (req, res, next) => {
     res.status(200).json(new ApiResponse(200, "Password updated successfully"));
 })
 
+const getAllFarmers = asyncHandler(async (req, res) => {
+    const farmers = await Farmer.find().select("-password -refreshToken")
+    return res
+    .status(200)
+    .json(new ApiResponse(200, farmers, "All farmers details"))
+})
+
 export{
     registerSupplier,
     loginSupplier,
@@ -346,5 +354,6 @@ export{
     supplier_getCurrentUser,
     supplier_updateAccountDetails,
     updateSupplierPassword,
-    updateSupplierCoverImage
+    updateSupplierCoverImage,
+    getAllFarmers
 }
