@@ -68,7 +68,7 @@ export default function SignIn() {
   
       if (response.payload?.data?.role === "supplier") {
         console.log("Logged in as Supplier:", response.payload.data);
-        navigate("/suppliers");
+        navigate("/");
         return;
       }
   

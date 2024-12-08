@@ -11,6 +11,7 @@ import NewsPage from './Pages/NewsPage';
 import DiseaseDetector from './Pages/DiseaseDetector';
 import ProfilePage from './Pages/ProfilePage';
 import CropDetails from './Pages/CropDetailPage';
+import FarmerListing from './Pages/FarmerListing';
 
 function AppContent() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function AppContent() {
         <Route path="/farmer-registration" element={<FarmerRegistration />} />
         <Route path="/supplier-registration" element={<SupplierRegistration />} />
         <Route path="/suppliers" element={<SupplierDirectory/>} />
+        <Route path="/farmers" element={<FarmerListing/>} />
         <Route path="/news" element={<NewsPage/>} />
         <Route path="/disease-detection" element={<DiseaseDetector/>} />
         <Route path="/profile" element={<ProfilePage/>} />
