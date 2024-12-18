@@ -36,9 +36,11 @@ const InputField = ({
 );
 
 export default function FarmerRegistration() {
+  const [profileImage, setProfileImage] = useState(null);
+  const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, status } = useSelector((state) => state.farmer);
+  const { loading } = useSelector((state) => state.farmer);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -47,77 +49,48 @@ export default function FarmerRegistration() {
     contactNumber: "",
     area: "",
     password: "",
-    coverImage:""
   });
-  const [avatar, setAvatar] = useState(null);
-  const [avatarSrc, setAvatarSrc] = useState("/placeholder.svg");
-  const fileInputRef = useRef(null);
 
   const handleCancel = () => {
-    navigate("/"); // Navigate back to the SignIn page
+    navigate("/"); // Navigate back to the home page
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Prepare data object to send
-    const payload = {
-      username: formData.username,
-      fullName: formData.fullName,
-      email: formData.email,
-      contactNumber: formData.contactNumber,
-      area: formData.area,
-      password: formData.password,
-      coverImage: avatar || ""  // If no avatar is selected, send an empty string
-    };
+    const payload = new FormData();
+    payload.append("username", formData.username);
+    payload.append("fullName", formData.fullName);
+    payload.append("email", formData.email);
+    payload.append("contactNumber", formData.contactNumber);
+    payload.append("area", formData.area);
+    payload.append("password", formData.password);
 
-    // Logging the payload
-    console.log("Payload:", payload);
+    if (fileInputRef.current.files[0]) {
+      payload.append("coverImage", fileInputRef.current.files[0]);
+    }
+    else{
+      payload.append("coverImage", "");
+    }
 
-    // Dispatching the action
     dispatch(registerFarmer(payload))
       .unwrap()
       .then(() => {
         alert("Farmer registered successfully!");
-        navigate("/"); // Redirect after successful registration
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error registering farmer:", error);
         alert("Registration failed. Please try again.");
       });
-};
-
-
-
-
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Allow only numeric input for "phone"
-    if (name === "phone") {
-      const numericValue = value.replace(/[^0-9]/g, ""); // Remove non-numeric characters
-      setFormData((prev) => ({
-        ...prev,
-        [name]: numericValue,
-      }));
-      return;
-    }
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setAvatar(file);
-      const reader = new FileReader();
-      reader.onload = (e) => setAvatarSrc(e.target.result);
-      reader.readAsDataURL(file);
-    }
   };
 
   return (
@@ -125,7 +98,7 @@ export default function FarmerRegistration() {
       <div className="flex-1 flex flex-col max-w-4xl mx-auto p-4 md:p-8 gap-8">
         <div className="space-y-6 flex-1">
           <h1 className="text-2xl text-left font-semibold text-gray-800">
-            New farmer registration
+            New Farmer Registration
           </h1>
 
           <div className="flex justify-center md:justify-start">
@@ -135,18 +108,17 @@ export default function FarmerRegistration() {
             >
               <Avatar className="relative inline-block w-24 h-24">
                 <AvatarImage
-                  src={avatarSrc || "https://github.com/shadcn.png"}
+                  src={profileImage || "https://github.com/shadcn.png"}
                   alt="Profile picture"
                   className="w-full h-full object-cover rounded-full"
                 />
-                <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-cover bg-center bg-[url('https://github.com/shadcn.png')] text-white font-bold text-sm rounded-full">
+                <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-cover bg-center text-white font-bold text-sm rounded-full">
                   Add Image
                 </AvatarFallback>
               </Avatar>
               <input
                 type="file"
                 ref={fileInputRef}
-                onChange={handleFileChange}
                 className="hidden"
                 accept="image/*"
               />
@@ -188,29 +160,16 @@ export default function FarmerRegistration() {
                 name="contactNumber"
                 type="tel"
                 placeholder="Required field cannot be empty"
-                pattern="[0-9]*"
-                inputMode="numeric"
                 value={formData.contactNumber}
                 onChange={handleChange}
               />
-              <div className="relative">
-                <input
-                  id="pincode"
-                  name="area"
-                  type="text"
-                  className="w-full px-6 py-2 text-xs bg-green-500 text-white border-none rounded-full focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent pt-7 placeholder-white placeholder-opacity-80"
-                  placeholder="Required field cannot be empty"
-                  required
-                  value={formData.pincode}
-                  onChange={handleChange}
-                />
-                <label
-                  htmlFor="pincode"
-                  className="absolute left-6 top-2 text-sm font-bold text-white"
-                >
-                  Location
-                </label>
-              </div>
+              <InputField
+                label="Location"
+                name="area"
+                placeholder="Required field cannot be empty"
+                value={formData.area}
+                onChange={handleChange}
+              />
             </div>
 
             <InputField
@@ -227,13 +186,13 @@ export default function FarmerRegistration() {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-gray-400 rounded-full hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                className="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-full hover:bg-green-600"
               >
                 {loading ? "Registering..." : "Register"}
               </button>

@@ -68,7 +68,7 @@ const SupplierProfile = () => {
             </Avatar>
             <div>
               <CardTitle className="text-2xl mb-1">{supplierProfile.fullName}</CardTitle>
-              <p className="text-green-100">@{supplierProfile.username}</p>
+              <p className="text-green-100">{supplierProfile.username}</p>
             </div>
           </div>
         </CardHeader>
