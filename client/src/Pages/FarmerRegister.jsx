@@ -36,7 +36,6 @@ const InputField = ({
 );
 
 export default function FarmerRegistration() {
-  const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -108,7 +107,7 @@ export default function FarmerRegistration() {
             >
               <Avatar className="relative inline-block w-24 h-24">
                 <AvatarImage
-                  src={profileImage || "https://github.com/shadcn.png"}
+                  src={"https://github.com/shadcn.png"}
                   alt="Profile picture"
                   className="w-full h-full object-cover rounded-full"
                 />

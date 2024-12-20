@@ -15,11 +15,12 @@ const SupplierInspection = () => {
     contactNumber: "",
     email: "",
     supplyCategory: "Seeds, Fertilizers",
-    description: "abcd efgh ijkl mno pqrs tuv wxyz"
+    description: " "
   });
 
   const fetchSupplierProfile = async () => {
     const response = await dispatch(getCurrentSupplier());
+    console.log(response.payload.data)
     setSupplierProfile(response.payload.data);
   };
 
