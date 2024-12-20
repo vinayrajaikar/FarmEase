@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Edit, Save, X, User, MapPin, Phone, Mail, Package, FileText } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Edit, Save, X, User, MapPin, Phone, Mail, Package, FileText, Camera } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch } from 'react-redux';
-import {getCurrentSupplier,updateSupplierAccount} from "../Redux/Slices/supplierSlice"
-
+import { getCurrentSupplier, updateSupplierAccount, updateSupplierCoverImage } from "../Redux/Slices/supplierSlice"
 
 const SupplierProfile = () => {
+  const fileInputRef = useRef(null);
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [supplierProfile, setSupplierProfile] = useState({
@@ -21,19 +21,28 @@ const SupplierProfile = () => {
     contactNumber: "",
     email: "",
     supplyCategory: "",
-    description: ""
+    description: "",
+    coverImage: "",
   });
+
+  const [profileImage, setprofileImage] = useState(null);
+
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = async() => {
-    const res=await dispatch(updateSupplierAccount(supplierProfile));
-    console.log(res);
-    setIsEditing(false);
-    
+  const handleSave = async () => {
+    const res = await dispatch(updateSupplierAccount(supplierProfile));
 
+    if (fileInputRef.current.files[0]) {
+      const formdata = new FormData();
+      formdata.append("coverImage", fileInputRef.current.files[0]);
+      const response = await dispatch(updateSupplierCoverImage(formdata));
+      // console.log(response.payload.data);
+    }
+
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
@@ -42,30 +51,46 @@ const SupplierProfile = () => {
 
   const fetchSupplierProfile = async () => {
     const response = await dispatch(getCurrentSupplier());
-    // console.log();
+    console.log(response.payload.data);
     setSupplierProfile(response.payload.data)
   }
 
   useEffect(() => {
     fetchSupplierProfile();
-  },[])
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(e.target.value)
     setSupplierProfile(prev => ({ ...prev, [name]: value }));
-    console.log(supplierProfile)
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => setSupplierProfile((prev) => ({...prev, coverImage: e.target.result}));
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   return (
     <div className="max-w-4xl mx-auto">
       <Card className="overflow-hidden">
         <CardHeader className="bg-teal-300 text-white p-6">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-24 w-24 border-4 border-white">
-              <AvatarImage src="/placeholder.svg?height=96&width=96" alt={supplierProfile.fullName} />
+          <div className="flex items-center space-x-4 relative"  >
+            <Avatar className="h-24 w-24 border-4 border-white" onClick={isEditing ?() => fileInputRef.current.click():null}>
+              <AvatarImage src={supplierProfile.coverImage} alt={supplierProfile.fullName} />
               <AvatarFallback>{supplierProfile.fullName.charAt(0)}</AvatarFallback>
             </Avatar>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
             <div>
               <CardTitle className="text-2xl mb-1">{supplierProfile.fullName}</CardTitle>
               <p className="text-green-100">{supplierProfile.username}</p>
@@ -113,23 +138,23 @@ const SupplierProfile = () => {
                   placeholder="Email"
                   type="email"
                 />
-              <Select 
-                onValueChange={(value) => 
-                  setSupplierProfile((prev) => ({ ...prev, supplyCategory: value }))
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select supply category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Seeds">Seeds</SelectItem>
-                  <SelectItem value="Fertilizers">Fertilizers</SelectItem>
-                  <SelectItem value="Pesticides">Pesticides</SelectItem>
-                  <SelectItem value="Farm Equipment">Farm Equipment</SelectItem>
-                  <SelectItem value="Seeds and Fertilizers">Seeds and Fertilizers</SelectItem>
-                </SelectContent>
-              </Select>
-
+                <Select 
+                  onValueChange={(value) => 
+                    setSupplierProfile((prev) => ({ ...prev, supplyCategory: value }))
+                  }
+                  value={supplierProfile.supplyCategory}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select supply category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Seeds">Seeds</SelectItem>
+                    <SelectItem value="Fertilizers">Fertilizers</SelectItem>
+                    <SelectItem value="Pesticides">Pesticides</SelectItem>
+                    <SelectItem value="Farm Equipment">Farm Equipment</SelectItem>
+                    <SelectItem value="Seeds and Fertilizers">Seeds and Fertilizers</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <Textarea
                 name="description"
@@ -140,7 +165,7 @@ const SupplierProfile = () => {
               />
               <div className="flex justify-end space-x-2">
                 <Button onClick={handleCancel} variant="outline">Cancel</Button>
-                <Button onClick={handleSave} variant="primary"  className="bg-teal-200 text-black">Save Changes</Button>
+                <Button onClick={handleSave} variant="primary" className="bg-teal-200 text-black">Save Changes</Button>
               </div>
             </div>
           ) : (

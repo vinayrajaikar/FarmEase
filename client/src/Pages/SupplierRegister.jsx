@@ -70,7 +70,7 @@ const TextAreaField = ({ label, name, placeholder, value, onChange, className = 
 );
 
 export default function SupplierRegistration() {
-
+  const fileInputRef = useRef(null);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     username: '',
@@ -81,16 +81,29 @@ export default function SupplierRegistration() {
     password: '',
     supplyCategory: '',
     description: '',
-    coverImage:''
   });
   const [coverImage, setcoverImage] = useState('/placeholder.svg');
-  const fileInputRef = useRef(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    const payload = new FormData();
+    payload.append('username', formData.username);
+    payload.append('email', formData.email);
+    payload.append('fullName', formData.fullName);
+    payload.append('contactNumber', formData.contactNumber);
+    payload.append('area', formData.area);
+    payload.append('password', formData.password);
+    payload.append('supplyCategory', formData.supplyCategory);
+    payload.append('description', formData.description);
 
-    dispatch(registerSupplier(formData))
+    if (fileInputRef.current.files[0]) {
+      payload.append("coverImage", fileInputRef.current.files[0]);
+    }
+    else{
+      payload.append("coverImage", "");
+    }
+
+    dispatch(registerSupplier(payload))
       .unwrap()
       .then(() => {
         alert("Supplier registered successfully!");
@@ -123,10 +136,6 @@ export default function SupplierRegistration() {
     }));
   };
 
-  const handleAvatarClick = () => {
-    fileInputRef.current.click();
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     console.log(file);
@@ -152,7 +161,7 @@ export default function SupplierRegistration() {
           <h1 className="text-2xl text-left font-semibold text-gray-800">New supplier registration</h1>
           
           <div className="flex justify-center md:justify-start">
-            <div className="relative w-24 h-24 cursor-pointer" onClick={handleAvatarClick}>
+            <div className="relative w-24 h-24 cursor-pointer" onClick={() => fileInputRef.current.click()}>
               <div className="w-full h-full rounded-full overflow-hidden">
               <Avatar className="relative inline-block w-24 h-24">
               <AvatarImage
