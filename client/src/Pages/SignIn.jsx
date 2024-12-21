@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginFarmer } from '../Redux/Slices/farmerSlice';
-import { loginSupplier } from '../Redux/Slices/supplierSlice';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginFarmer } from "../Redux/Slices/farmerSlice";
+import { loginSupplier } from "../Redux/Slices/supplierSlice";
 
-const InputField = ({ label, name, type = "text", placeholder, value, onChange, className = "" }) => (
+import FarmEaseLogo from "../utils/FarmEaseLogo.png";
+
+const InputField = ({
+  label,
+  name,
+  type = "text",
+  placeholder,
+  value,
+  onChange,
+  className = "",
+}) => (
   <div className={`relative ${className}`}>
     <input
       id={name}
@@ -27,8 +37,8 @@ const InputField = ({ label, name, type = "text", placeholder, value, onChange, 
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -39,10 +49,10 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       let response;
-  
+
       // Try logging in as a farmer
       response = await dispatch(
         loginFarmer({
@@ -50,13 +60,13 @@ export default function SignIn() {
           password: formData.password,
         })
       );
-  
+
       if (response.payload?.data?.user.role === "farmer") {
         console.log("Logged in as Farmer:", response.payload.data.user);
         navigate("/home");
         return;
       }
-  
+
       // If not a farmer, try logging in as a supplier
       response = await dispatch(
         loginSupplier({
@@ -65,13 +75,13 @@ export default function SignIn() {
         })
       );
       console.log(response.payload.data.role);
-  
+
       if (response.payload?.data?.role === "supplier") {
         console.log("Logged in as Supplier:", response.payload.data);
         navigate("/supplier-home");
         return;
       }
-  
+
       // If neither role is valid
       setError("Invalid email or password");
     } catch (error) {
@@ -79,7 +89,7 @@ export default function SignIn() {
       setError("Something went wrong. Please try again.");
     }
   };
-  
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -91,11 +101,22 @@ export default function SignIn() {
     <div className="flex min-h-screen bg-white">
       <div className="flex-1 flex flex-col justify-center max-w-md mx-auto p-4 md:p-8">
         <div className="space-y-8">
-          <h1 className="text-2xl font-semibold text-gray-800 text-center">Sign In</h1>
+          <div className="flex flex-1 justify-center">
+            <img
+              src={FarmEaseLogo}
+              alt="FarmEase"
+              className="h-10 w-auto sm:h-20"
+            />
+          </div>
+          <h1 className="text-2xl font-semibold text-gray-800 text-center">
+            Sign In
+          </h1>
 
-          
-
-          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            autoComplete="off"
+          >
             <InputField
               label="Email"
               name="email"
@@ -114,12 +135,16 @@ export default function SignIn() {
             />
             <button
               type="submit"
-              className={`w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               disabled={loading}
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? "Signing in..." : "Sign In"}
             </button>
-            {error && <p className="text-sm text-red-600 text-center">{error}</p>}
+            {error && (
+              <p className="text-sm text-red-600 text-center">{error}</p>
+            )}
           </form>
 
           <div className="text-center space-y-4">
