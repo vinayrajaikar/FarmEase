@@ -1,5 +1,9 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const weatherIcons = {
   "01d": "https://cdn-icons-png.flaticon.com/128/5825/5825968.png",
@@ -24,6 +28,7 @@ const weatherIcons = {
 
 const Forecast = () => {
   const [forecastData, setForecastData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchForecast = async () => {
@@ -44,19 +49,26 @@ const Forecast = () => {
               day: `${date.getUTCDate()} ${date.toLocaleString("default", {
                 month: "short",
               })}`,
-              time: `${date.getUTCHours() > 12 ? date.getUTCHours() - 12 : date.getUTCHours()}:${
+              time: `${
+                date.getUTCHours() > 12
+                  ? date.getUTCHours() - 12
+                  : date.getUTCHours()
+              }:${
                 date.getUTCMinutes() < 10 ? "0" : ""
               }${date.getUTCMinutes()} ${
                 date.getUTCHours() >= 12 ? "PM" : "AM"
               }`,
               temp: Math.round(entry.main.temp),
               icon: weatherIcons[entry.weather[0].icon],
+              description: entry.weather[0].description,
             };
           });
 
         setForecastData(processedData);
+        setError(null);
       } catch (error) {
         console.error("Error fetching forecast data:", error);
+        setError("Failed to fetch forecast data. Please try again later.");
       }
     };
 
@@ -64,26 +76,51 @@ const Forecast = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 sm:gap-4">
-      {forecastData.length > 0 ? (
-        forecastData.map((forecast, index) => (
-          <div
-            key={index}
-            className="bg-[#C2F5EA] rounded-lg p-3 flex flex-col items-center justify-between sm:p-4 h-32 sm:h-44"
-          >
-            <p className="text-xs font-medium sm:text-sm">{forecast.day}</p>
-            <img
-              src={forecast.icon}
-              alt="Weather Icon"
-              className="my-2 h-8 w-8 sm:h-12 sm:w-12 object-contain"
-            />
-            <p className="text-base font-bold sm:text-lg">{forecast.temp}°</p>
+    <Card className="w-full text-[#4A3933]  shadow-none border-none  ">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold">5-Day Forecast</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : forecastData.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+            {forecastData.map((forecast, index) => (
+              <Card key={index} className="bg-emerald-200 shadow-md">
+                <CardContent className="p-4 flex flex-col items-center justify-between h-full">
+                  <p className="text-sm font-medium text-green-950">
+                    {forecast.day}
+                  </p>
+                  <div className="my-2 flex flex-col items-center">
+                    <img
+                      src={forecast.icon}
+                      alt={forecast.description}
+                      className="h-12 w-12 object-contain"
+                    />
+                    <p className="text-xs text-center mt-1 text-green-950">
+                      {forecast.description}
+                    </p>
+                  </div>
+                  <p className="text-lg font-bold">{forecast.temp}°C</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        ))
-      ) : (
-        <p className="col-span-5 text-center">Loading...</p>
-      )}
-    </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+            {[...Array(5)].map((_, index) => (
+              <Card key={index} className="bg-emerald-100 shadow-md">
+                <CardContent className="p-4 flex flex-col items-center justify-between h-full">
+                  <Skeleton className="h-4 w-20 mb-2" />
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <Skeleton className="h-6 w-16 mt-2" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

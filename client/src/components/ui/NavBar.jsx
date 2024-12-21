@@ -2,11 +2,7 @@ import React from "react";
 import { Menu, Search, User, LogOut } from "lucide-react"; // Import LogOut icon
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./button.jsx";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "./sheet.jsx";
+import { Sheet, SheetContent, SheetTrigger } from "./sheet.jsx";
 import FarmEaseLogo from "../../utils/FarmEaseLogo.png";
 
 const NavBar = () => {
@@ -27,6 +23,7 @@ const NavBar = () => {
       { to: "/disease-detection", label: "Disease Detection" },
       { to: "/suppliers", label: "Suppliers" },
       { to: "/news", label: "News" },
+      { to: "/profile", label: "Profile" },
     ];
 
     return (
@@ -57,7 +54,7 @@ const NavBar = () => {
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
-                className="px-0 w-8 bg-emerald-300 text-base hover:bg-transparent focus:ring-0 lg:hidden"
+                className="px-0 w-8 bg-emerald-300 text-base hover:bg-transparent  lg:hidden"
               >
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle menu</span>
@@ -84,9 +81,11 @@ const NavBar = () => {
           </div>
 
           {/* Logo */}
-          <div className="flex flex-1 justify-center">
-            <img src={FarmEaseLogo} alt="FarmEase" className="h-10 w-auto sm:h-16" />
-          </div>
+          <img
+            src={FarmEaseLogo}
+            alt="FarmEase"
+            className="h-10 w-auto sm:h-16"
+          />
 
           {/* Right Actions */}
           <div className="hidden lg:flex items-center gap-2 sm:gap-4">
@@ -101,15 +100,6 @@ const NavBar = () => {
             </div>
 
             {/* Profile */}
-            <Button
-              size="icon"
-              variant="ghost"
-              className="h-9 w-9 bg-emerald-300"
-              onClick={handleProfileClick}
-            >
-              <User className="h-5 w-5" />
-              <span className="sr-only">User account</span>
-            </Button>
 
             {/* Logout */}
             <Button

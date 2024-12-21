@@ -1,6 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { ArrowRight, Sprout } from "lucide-react";
 
 const CropInfo = () => {
   const navigate = useNavigate();
@@ -10,25 +18,40 @@ const CropInfo = () => {
   };
 
   return (
-    <div className="relative rounded-lg bg-[#E6E6FA] p-4 sm:p-8">
-      <div className="max-w-2xl space-y-3 sm:space-y-4 place-items-start">
-        <h2 className="text-lg font-semibold text-gray-900 sm:text-2xl text-left">
+    <Card className="w-full bg-emerald-100  text-[#4A3933] shadow-lg overflow-hidden">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-bold flex items-center gap-2">
+          <Sprout className="h-6 w-6 text-[#8B6E4E]" />
           Crop Information
-        </h2>
-        <p className="text-sm text-gray-600 sm:text-base text-left">
-          Get essential details about the crop you're growing, including ideal
-          conditions, care tips, and ways to enhance yield. This feature helps you
-          make informed decisions for healthier and more productive crops.
-        </p>
-        <Button
-          className="bg-[#6B5ECD] text-white hover:bg-[#6B5ECD]/90"
-          onClick={handleGetInfo}
-        >
-          Get Info
-        </Button>
-      </div>
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:block"></div>
-    </div>
+        </CardTitle>
+        <CardDescription className="text-[#6B5750]">
+          Essential details for healthier and more productive crops
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="space-y-3 flex-grow">
+          <p className="text-sm sm:text-base text-[#4A3933]">
+            Get essential details about the crop you're growing, including ideal
+            conditions, care tips, and ways to enhance yield. This feature helps
+            you make informed decisions for healthier and more productive crops.
+          </p>
+          <Button
+            className="bg-emerald-400 text-white hover:bg-[#6B5750] transition-colors"
+            onClick={handleGetInfo}
+          >
+            Get Info
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <div className="hidden sm:block">
+          <img
+            src="https://images.unsplash.com/photo-1600626336477-96e4ee89a052?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMjA3fDB8MXxzZWFyY2h8Mnx8V2hlYXR8ZW58MHx8fHwxNzMzMDY4MTIyfDA&ixlib=rb-4.0.3&q=80&w=1080?height=100&width=100"
+            alt="Crop Information"
+            className="w-24 h-24 object-cover rounded-full border-4 border-emerald-200"
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
