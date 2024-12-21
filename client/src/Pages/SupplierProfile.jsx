@@ -25,24 +25,28 @@ const SupplierProfile = () => {
     coverImage: "",
   });
 
-  const [profileImage, setprofileImage] = useState(null);
-
+  const [isdetailupdated, setIsdetailupdated] = useState(false);
+  const [coverImage, setcoverImage] = useState(null);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  const handleSave = async () => {
-    const res = await dispatch(updateSupplierAccount(supplierProfile));
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(isdetailupdated){
+      const res = await dispatch(updateSupplierAccount(supplierProfile));
+      console.log("Detail Updated");
+    }
+    
     if (fileInputRef.current.files[0]) {
       const formdata = new FormData();
       formdata.append("coverImage", fileInputRef.current.files[0]);
       const response = await dispatch(updateSupplierCoverImage(formdata));
-      // console.log(response.payload.data);
+      console.log("Cover Image Updated");
     }
-
     setIsEditing(false);
+    setIsdetailupdated(false);
   };
 
   const handleCancel = () => {
@@ -62,6 +66,7 @@ const SupplierProfile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setSupplierProfile(prev => ({ ...prev, [name]: value }));
+    setIsdetailupdated(true);
   };
 
   const handleFileChange = (e) => {
@@ -69,7 +74,7 @@ const SupplierProfile = () => {
     console.log(file);
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => setSupplierProfile((prev) => ({...prev, coverImage: e.target.result}));
+      reader.onload = (e) => setcoverImage(e.target.result);
       reader.readAsDataURL(file);
     }
   };
@@ -81,7 +86,7 @@ const SupplierProfile = () => {
         <CardHeader className="bg-teal-300 text-white p-6">
           <div className="flex items-center space-x-4 relative"  >
             <Avatar className="h-24 w-24 border-4 border-white" onClick={isEditing ?() => fileInputRef.current.click():null}>
-              <AvatarImage src={supplierProfile.coverImage} alt={supplierProfile.fullName} />
+              <AvatarImage src={coverImage||supplierProfile.coverImage} alt={supplierProfile.fullName} />
               <AvatarFallback>{supplierProfile.fullName.charAt(0)}</AvatarFallback>
             </Avatar>
             <input
@@ -165,7 +170,7 @@ const SupplierProfile = () => {
               />
               <div className="flex justify-end space-x-2">
                 <Button onClick={handleCancel} variant="outline">Cancel</Button>
-                <Button onClick={handleSave} variant="primary" className="bg-teal-200 text-black">Save Changes</Button>
+                <Button onClick={handleSubmit} variant="primary" className="bg-teal-200 text-black">Save Changes</Button>
               </div>
             </div>
           ) : (

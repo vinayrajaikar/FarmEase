@@ -50,6 +50,18 @@ export default function FarmerRegistration() {
     password: "",
   });
 
+  const [coverImage, setcoverImage] = useState("");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => setcoverImage(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleCancel = () => {
     navigate("/"); // Navigate back to the home page
   };
@@ -107,17 +119,19 @@ export default function FarmerRegistration() {
             >
               <Avatar className="relative inline-block w-24 h-24">
                 <AvatarImage
-                  src={"https://github.com/shadcn.png"}
+                  src={coverImage}
                   alt="Profile picture"
                   className="w-full h-full object-cover rounded-full"
                 />
-                <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-cover bg-center text-white font-bold text-sm rounded-full">
-                  Add Image
-                </AvatarFallback>
+              <AvatarFallback className="absolute inset-0 flex items-center justify-center bg-cover bg-center bg-[url('https://github.com/shadcn.png')] text-white font-bold text-sm rounded-full">
+                Add Image
+              </AvatarFallback>
               </Avatar>
               <input
                 type="file"
                 ref={fileInputRef}
+                placeholder="Add Profile Picture"
+                onChange={handleFileChange}
                 className="hidden"
                 accept="image/*"
               />

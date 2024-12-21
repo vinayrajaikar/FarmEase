@@ -14,7 +14,7 @@ import NavBar from "./components/ui/NavBar";
 import SupplierDirectory from "./Pages/SuppliersPage";
 import NewsPage from "./Pages/NewsPage";
 import DiseaseDetector from "./Pages/DiseaseDetector";
-import ProfilePage from "./Pages/ProfilePage";
+import FarmerProfile from "./Pages/FarmerProfile";
 import CropDetails from "./Pages/CropDetailPage";
 import FarmerListing from "./Pages/FarmerListing";
 import SupplierNavBar from "./components/ui/SupplierNavBar";
@@ -55,7 +55,7 @@ function AppContent() {
         <Route path="/farmers" element={<FarmerListing />} />
         <Route path="/news" element={<NewsPage />} />
         <Route path="/disease-detection" element={<DiseaseDetector />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/farmer-profile" element={<FarmerProfile />} />
         <Route path="/cropdetail" element={<CropDetails />} />
         <Route path="/supplier-home" element={<FarmerListing />} />
         <Route path="/supplier-profile" element={<SupplierProfile />} />

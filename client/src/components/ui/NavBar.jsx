@@ -10,7 +10,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    navigate("/profile"); // Replace '/profile' with your desired route
+    navigate("/farmer-profile"); // Replace '/profile' with your desired route
   };
 
   const handleLogout = () => {
@@ -23,7 +23,7 @@ const NavBar = () => {
       { to: "/disease-detection", label: "Disease Detection" },
       { to: "/suppliers", label: "Suppliers" },
       { to: "/news", label: "News" },
-      { to: "/profile", label: "Profile" },
+      { to: "/farmer-profile", label: "Profile" },
     ];
 
     return (
