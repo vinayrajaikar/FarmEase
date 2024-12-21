@@ -246,7 +246,7 @@ export default function SupplierRegistration() {
               name="password"
               type="password"
               placeholder="Minimum eight characters"
-              minLength={8}
+              minLength={4}
               value={formData.password}
               onChange={handleChange}
             />

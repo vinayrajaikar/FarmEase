@@ -58,7 +58,7 @@ export const updateFarmerPassword = createAsyncThunk(
 export const updateFarmerCoverImage = createAsyncThunk(
     "updateFarmerCoverImage",
     async(details)=>{
-        const response = await axiosInstance.post("/farmer/update-farmer-cover-image",details);
+        const response = await axiosInstance.patch("/farmer/update-farmer-cover-image",details);
         return response.data;
     }
 )
