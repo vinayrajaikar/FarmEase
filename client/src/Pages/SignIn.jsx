@@ -105,7 +105,7 @@ export default function SignIn() {
             <img
               src={FarmEaseLogo}
               alt="FarmEase"
-              className="h-10 w-auto sm:h-20"
+              className="h-16 w-auto sm:h-20"
             />
           </div>
           <h1 className="text-2xl font-semibold text-gray-800 text-center">
