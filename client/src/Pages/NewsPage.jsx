@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, Link2, ChevronDown, ChevronUp } from "lucide-react";
 import { getAllNews,uploadNews } from "../Redux/Slices/newsSlice";
-import { useDispatch, useSelector } from "react-redux";
+import {adddLike} from "../Redux/Slices/likeSlice"
+import { useDispatch} from "react-redux";
 
 function NewsPage() {
   const [newPostContent, setNewPostContent] = useState("");
@@ -17,13 +18,10 @@ function NewsPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Dispatch the action to fetch all news and set posts
     const fetchNews = async () => {
       try {
-        const res = await dispatch(getAllNews());  // Dispatch the action
-        // console.log("News fetched successfully");
-        // console.log(res.payload.data);
-        setNews(res.payload.data);  // Set the fetched news to state
+        const res =await dispatch(getAllNews()); 
+        setNews(res.payload.data);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
@@ -49,13 +47,30 @@ function NewsPage() {
     // setShowCreatePost(false);
   };
 
-  const handleLike = (postId) => {
-    setNews(news.map((post) => (post._id === postId ? { ...post, likeCount: post.likeCount + 1 } : post)));
+  const handleLike = async (post) => {
+    const res = await dispatch(adddLike(post._id)); 
+    console.log(res.payload.data);
+  
+    if (res.type === "adddLike/fulfilled") {
+      setNews(news.map((item) => 
+        item._id === post._id 
+          ? { 
+              ...item, 
+              likeCount: post.likedByUser 
+                ? post.likeCount - 1
+                : post.likeCount + 1,
+              likedByUser: !post.likedByUser 
+            }
+          : item
+      ));
+    }
   };
+  
+  
 
-  const handleDislike = (postId) => {
-    setNews(news.map((post) => (post._id === postId ? { ...post, dislikeCount: post.dislikeCount + 1 } : post)));
-  };
+  // const handleDislike = (postId) => {
+  //   setNews(news.map((post) => (post._id === postId ? { ...post, dislikeCount: post.dislikeCount + 1 } : post)));
+  // };
 
   const togglePostExpansion = (postId) => {
     setExpandedPosts((prev) => ({
@@ -163,7 +178,7 @@ function NewsPage() {
             </CardContent>
             <CardFooter>
               <div className="flex space-x-4">
-                <Button variant="outline" size="sm" onClick={() => handleLike(post._id)}>
+                <Button variant="outline" size="sm" onClick={() => handleLike(post)}>
                   <ThumbsUp className="mr-2 h-4 w-4" />
                   {post.likeCount}
                 </Button>

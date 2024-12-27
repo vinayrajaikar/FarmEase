@@ -6,18 +6,20 @@ const initialState ={
     status:false
 }
 
-const adddLike = createAsyncThunk(
-    "addLike",
+export const adddLike = createAsyncThunk(
+    "adddLike",
     async(newsId)=>{
-        const response = await axiosInstance.post(`/like/add-news-like/:${newsId}`);
+        console.log(newsId)
+        const response = await axiosInstance.post(`/like/add-news-like/${newsId}`);
         return response.data;
     }
 );
 
-const getLike = createAsyncThunk(
+export const getLike = createAsyncThunk(
     "getLike",
     async(newsId)=>{
-        const response = await axiosInstance.post(`/like/get-liked-news-count/:${newsId}`);
+        console.log(newsId)
+        const response = await axiosInstance.post(`/like/get-liked-news-count/${newsId}`);
         return response.data;
     }
 );
@@ -25,7 +27,7 @@ const getLike = createAsyncThunk(
 const likeSlice = createSlice({
     name:"like",
     initialState,
-    reducers:{},
+    reducers:{},    
     extraReducers:(builder)=>{
         builder
         .addCase(adddLike.pending,(state)=>{

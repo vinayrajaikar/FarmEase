@@ -154,6 +154,7 @@ const deleteNews = asyncHandler(async (req, res) => {
 // })
 
 const getAllNews = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
     const newsWithLikesAndDislikes = await News.aggregate([
         {
             $lookup: {
@@ -175,6 +176,9 @@ const getAllNews = asyncHandler(async (req, res) => {
             $addFields: {
                 likeCount: { $size: "$likes" },          // Adds a new field 'likeCount' as the size of the 'likes' array
                 dislikeCount: { $size: "$dislikes" },    // Adds a new field 'dislikeCount' as the size of the 'dislikes' array
+                likedByUser: {
+                    $in: [userId, "$likes.likedBy"]  // Check if the user's ID is in the 'likes' array
+                }
             }
         },
         {

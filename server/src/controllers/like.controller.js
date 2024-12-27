@@ -9,8 +9,6 @@ const toogleNewsLike = asyncHandler(async (req, res) => {
     const { newsId } = req.params;
     const userId = req.user._id;    
     const userType = req.user.role.charAt(0).toUpperCase() + req.user.role.slice(1);
-    // console.log(newsId);
-    // console.log(userId);
 
     if (!mongoose.Types.ObjectId.isValid(newsId)) {
         throw new ApiError(400, "Invalid news ID");
