@@ -27,8 +27,6 @@ const generateAccessAndRefreshToken = async(userId)=>{
 }
 
 const registerSupplier = asyncHandler(async (req, res, next) => {
-    // console.log("Working!");
-    // -------------------------------------
 
     // Get user details from front end
     const {username, email, fullName, contactNumber, area, password, supplyCategory, description} = req.body;
