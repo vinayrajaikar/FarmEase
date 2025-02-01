@@ -19,13 +19,10 @@ function NewsPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Dispatch the action to fetch all news and set posts
     const fetchNews = async () => {
       try {
-        const res = await dispatch(getAllNews());  // Dispatch the action
-        // console.log("News fetched successfully");
-        // console.log(res.payload.data);
-        setNews(res.payload.data);  // Set the fetched news to state
+        const res =await dispatch(getAllNews()); 
+        setNews(res.payload.data);
       } catch (error) {
         console.error("Error fetching news:", error);
       }
@@ -186,7 +183,7 @@ function NewsPage() {
             </CardContent>
             <CardFooter>
               <div className="flex space-x-4">
-                <Button variant="outline" size="sm" onClick={() => handleLike(post._id)}>
+                <Button variant="outline" size="sm" onClick={() => handleLike(post)}>
                   <ThumbsUp className="mr-2 h-4 w-4" />
                   {post.likeCount}
                 </Button>

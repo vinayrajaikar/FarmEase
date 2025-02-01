@@ -25,7 +25,7 @@ export const getLike = createAsyncThunk(
 const likeSlice = createSlice({
     name:"like",
     initialState,
-    reducers:{},
+    reducers:{},    
     extraReducers:(builder)=>{
         builder
         .addCase(addLike.pending,(state)=>{
