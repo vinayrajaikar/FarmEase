@@ -36,6 +36,7 @@ function SupplierDirectory() {
 
   const fetchAllSuppliers = async () => {
     const response = await dispatch(getAllSuppliers());
+    console.log(response.payload);
     if (response.payload) {
       setSuppliers(response.payload);
       setFilteredSuppliers(response.payload);
@@ -48,7 +49,8 @@ function SupplierDirectory() {
   }, []);
 
   const inspectFn = (supplierId) => {
-    navigate(`/supplier-inspection`, { state: { supplierId } });
+    console.log(supplierId);
+    navigate(`/supplier-inspection/${supplierId}`);
   };
 
   return (
@@ -102,8 +104,8 @@ function SupplierDirectory() {
       </Card>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredSuppliers.map((supplier) => (
-          <div key={supplier.id} onClick={() => inspectFn(supplier.id)}>
+        {filteredSuppliers.map((supplier,id) => (
+          <div key={id} onClick={() => inspectFn(supplier._id)}>
             <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-lg cursor-pointer">
               <CardHeader className="bg-[#6EE7B7]/10 flex-row border-b border-[#6EE7B7]">
                 <Avatar>

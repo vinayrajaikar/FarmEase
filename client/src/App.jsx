@@ -59,7 +59,7 @@ function AppContent() {
         <Route path="/cropdetail" element={<CropDetails />} />
         <Route path="/supplier-home" element={<FarmerListing />} />
         <Route path="/supplier-profile" element={<SupplierProfile />} />
-        <Route path="/supplier-inspection" element={<SupplierInspection />} />
+        <Route path="/supplier-inspection/:supplierId" element={<SupplierInspection />} />
       </Routes>
     </div>
   );
