@@ -49,6 +49,7 @@ function NewsPage() {
   };
 
   const handleLike = async(postId) => {
+    console.log(postId);
     const res= await dispatch(addLike(postId));
     console.log(res.payload);
     if(res.payload.data=="News liked successfully"){
@@ -183,7 +184,7 @@ function NewsPage() {
             </CardContent>
             <CardFooter>
               <div className="flex space-x-4">
-                <Button variant="outline" size="sm" onClick={() => handleLike(post)}>
+                <Button variant="outline" size="sm" onClick={() => handleLike(post._id)}>
                   <ThumbsUp className="mr-2 h-4 w-4" />
                   {post.likeCount}
                 </Button>
