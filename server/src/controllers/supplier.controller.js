@@ -241,30 +241,25 @@ const supplier_updateAccountDetails = asyncHandler(async (req, res, next) => {
 
     const {fullName, contactNumber, username, area, email, description, supplyCategory} = req.body;
 
-    // Check if all fields are provided
     if (!fullName || !contactNumber || !username || !area || !email || !description || !supplyCategory) {
         throw new ApiError(400, "All fields are required");
     }
 
-    // Check for unique `username`
     const existingUsername = await Supplier.findOne({ username, _id: { $ne: req.user._id } });
     if (existingUsername) {
         throw new ApiError(400, "Username is already in use");
     }
 
-    // Check for unique `contactNumber`
     const existingContactNumber = await Supplier.findOne({ contactNumber, _id: { $ne: req.user._id } });
     if (existingContactNumber) {
         throw new ApiError(400, "Contact number is already in use");
     }
 
-    // Check for unique `email`
     const existingEmail = await Supplier.findOne({ email, _id: { $ne: req.user._id } });
     if (existingEmail) {
         throw new ApiError(400, "Email is already in use");
     }    
 
-    // Update the farmer's details
     const supplier = await Supplier.findByIdAndUpdate(
         req.user._id,
         {
