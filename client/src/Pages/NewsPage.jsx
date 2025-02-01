@@ -6,15 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, Link2, ChevronDown, ChevronUp } from "lucide-react";
 import { getAllNews,uploadNews } from "../Redux/Slices/newsSlice";
-import {adddLike} from "../Redux/Slices/likeSlice"
-import { useDispatch} from "react-redux";
+import { addLike, getLike } from "../Redux/Slices/likeSlice";
+import { AddDislike, getDislike } from "@/Redux/Slices/dislikeSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function NewsPage() {
   const [newPostContent, setNewPostContent] = useState("");
   const [newPostLink, setNewPostLink] = useState("");
   const [expandedPosts, setExpandedPosts] = useState({});
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [news, setNews] = useState([]); // State to store fetched news
+  const [news, setNews] = useState([])
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -47,30 +48,34 @@ function NewsPage() {
     // setShowCreatePost(false);
   };
 
-  const handleLike = async (post) => {
-    const res = await dispatch(adddLike(post._id)); 
-    console.log(res.payload.data);
-  
-    if (res.type === "adddLike/fulfilled") {
-      setNews(news.map((item) => 
-        item._id === post._id 
-          ? { 
-              ...item, 
-              likeCount: post.likedByUser 
-                ? post.likeCount - 1
-                : post.likeCount + 1,
-              likedByUser: !post.likedByUser 
-            }
-          : item
-      ));
+  const handleLike = async(postId) => {
+    const res= await dispatch(addLike(postId));
+    console.log(res.payload);
+    if(res.payload.data=="News liked successfully"){
+      setNews(news.map((post) => (post._id === postId ? { ...post, likeCount: post.likeCount + 1 } : post)));
+    }
+    else if(res.payload.data=="News unliked successfully"){
+      setNews(news.map((post) => (post._id === postId ? { ...post, likeCount: post.likeCount - 1 } : post)));
+    }
+    else{
+      alert("Error in liking news");
+    }
+    
+  };
+
+  const handleDislike = async(postId) => {
+    const res= await dispatch(AddDislike(postId));
+    console.log(res.payload);
+    if(res.payload.data=="News disliked successfully"){
+      setNews(news.map((post) => (post._id === postId ? { ...post, dislikeCount: post.dislikeCount + 1 } : post)));
+    }
+    else if(res.payload.data=="News un-disliked successfully"){
+      setNews(news.map((post) => (post._id === postId ? { ...post, dislikeCount: post.dislikeCount - 1 } : post)));
+    }
+    else{
+      alert("Error in disliking news");
     }
   };
-  
-  
-
-  // const handleDislike = (postId) => {
-  //   setNews(news.map((post) => (post._id === postId ? { ...post, dislikeCount: post.dislikeCount + 1 } : post)));
-  // };
 
   const togglePostExpansion = (postId) => {
     setExpandedPosts((prev) => ({
@@ -78,7 +83,7 @@ function NewsPage() {
       [postId]: !prev[postId],
     }));
   };
-
+ 
   return (
     <div className="container mx-auto p-4 space-y-8">
       {/* Toggle button for creating a new post */}
