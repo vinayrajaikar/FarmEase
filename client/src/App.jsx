@@ -20,6 +20,7 @@ import FarmerListing from "./Pages/FarmerListing";
 import SupplierNavBar from "./components/ui/SupplierNavBar";
 import SupplierProfile from "./Pages/SupplierProfile";
 import SupplierInspection from "./Pages/SupplierInspection";
+import Auth from "./Auth";
 
 function AppContent() {
   const location = useLocation();
@@ -41,25 +42,63 @@ function AppContent() {
       {!hiddenNavBarRoutes.includes(location.pathname) && <NavBar />}
       {supplierRoutes.includes(location.pathname) && <SupplierNavBar />}
       <Routes>
-        {/* <Auth allowedroles={['farmer', 'supplier']}> */}
         <Route path="/" element={<SignIn />} />
-        <Route path="/home" element={<HomePage />} />
-        {/* </Auth> */}
-
+        <Route path="/home" element={
+          <Auth allowedRoles={["farmer"]}>  
+            <HomePage />
+          </Auth>
+          } />
         <Route path="/farmer-registration" element={<FarmerRegistration />} />
-        <Route
-          path="/supplier-registration"
-          element={<SupplierRegistration />}
-        />
-        <Route path="/suppliers" element={<SupplierDirectory />} />
+        <Route path="/supplier-registration" element={<SupplierRegistration />} />
+        <Route path="/suppliers" element={
+          <Auth allowedRoles={["farmer"]}>
+            <SupplierDirectory />
+          </Auth>
+        } />
+          
         <Route path="/farmers" element={<FarmerListing />} />
-        <Route path="/news" element={<NewsPage />} />
-        <Route path="/disease-detection" element={<DiseaseDetector />} />
-        <Route path="/farmer-profile" element={<FarmerProfile />} />
-        <Route path="/cropdetail" element={<CropDetails />} />
-        <Route path="/supplier-home" element={<FarmerListing />} />
-        <Route path="/supplier-profile" element={<SupplierProfile />} />
-        <Route path="/supplier-inspection/:supplierId" element={<SupplierInspection />} />
+
+        <Route path="/news" element={
+          <Auth allowedRoles={["farmer"]}>
+          <NewsPage />
+          </Auth>
+        } />
+          
+        <Route path="/disease-detection" element={
+          <Auth allowedRoles={["farmer"]}>
+            <DiseaseDetector />
+          </Auth>
+        } />
+
+        <Route path="/farmer-profile" element={
+          <Auth allowedRoles={["farmer"]}>
+            <FarmerProfile />
+          </Auth>
+        } />
+
+        <Route path="/cropdetail" element={
+          <Auth allowedRoles={["farmer"]}>
+            <CropDetails />
+          </Auth>
+        } />
+
+        <Route path="/supplier-home" element={
+          <Auth allowedRoles={["supplier"]}>
+            <FarmerListing />
+          </Auth>
+          } />
+
+        <Route path="/supplier-profile" element={
+          <Auth allowedRoles={["supplier"]}>
+            <SupplierProfile />
+          </Auth>
+          } />
+
+        <Route path="/supplier-inspection/:supplierId" element={
+          <Auth allowedRoles={["supplier"]}>
+            <SupplierInspection />
+          </Auth>
+        } />
       </Routes>
     </div>
   );
