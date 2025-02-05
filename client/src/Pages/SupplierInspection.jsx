@@ -4,9 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch } from 'react-redux';
+import { useParams } from "react-router-dom";
 import { getCurrentSupplier } from "../Redux/Slices/supplierSlice";
+import axiosInstance from '@/utils/axiosInstance';
 
 const SupplierInspection = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
   const [supplierProfile, setSupplierProfile] = useState({
     username: "",
@@ -19,9 +22,11 @@ const SupplierInspection = () => {
   });
 
   const fetchSupplierProfile = async () => {
-    const response = await dispatch(getCurrentSupplier());
-    console.log(response.payload.data)
-    setSupplierProfile(response.payload.data);
+    // const response = await dispatch(getCurrentSupplier());
+    console.log(id);
+    const response =await axiosInstance.get(`/farmer/suppliers/${id}`);
+    console.log(response);
+    setSupplierProfile(response.data);
   };
 
   useEffect(() => {
@@ -35,11 +40,12 @@ const SupplierInspection = () => {
           <div className="flex items-center space-x-4">
             <Avatar className="h-24 w-24 border-4 border-white">
               <AvatarImage src="/placeholder.svg?height=96&width=96" alt={supplierProfile.fullName} />
-              <AvatarFallback className='text-black'>{supplierProfile.fullName.charAt(0)}</AvatarFallback>
+              
+              <AvatarFallback className='text-black'><img src={supplierProfile.coverImage} alt="Cover Image" /></AvatarFallback>
             </Avatar>
             <div>
               <CardTitle className="text-2xl mb-1">{supplierProfile.fullName}</CardTitle>
-              <p className="text-green-100">@{supplierProfile.username}</p>
+              <p className="text-green-100">{supplierProfile.username}</p>
             </div>
           </div>
         </CardHeader>

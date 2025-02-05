@@ -56,8 +56,6 @@ function AppContent() {
           </Auth>
         } />
           
-        <Route path="/farmers" element={<FarmerListing />} />
-
         <Route path="/news" element={
           <Auth allowedRoles={["farmer"]}>
           <NewsPage />
@@ -68,6 +66,12 @@ function AppContent() {
           <Auth allowedRoles={["farmer"]}>
             <DiseaseDetector />
           </Auth>
+        } />
+
+        <Route path="/suppliers/:id" element={
+          // <Auth allowedRoles={["farmer"]}>
+            <SupplierInspection />
+          // </Auth>
         } />
 
         <Route path="/farmer-profile" element={
@@ -81,12 +85,14 @@ function AppContent() {
             <CropDetails />
           </Auth>
         } />
-
+{/* ---------------------------------------------------------------------------- */}
         <Route path="/supplier-home" element={
           <Auth allowedRoles={["supplier"]}>
             <FarmerListing />
           </Auth>
           } />
+
+        <Route path="/farmers" element={<FarmerListing />} />
 
         <Route path="/supplier-profile" element={
           <Auth allowedRoles={["supplier"]}>
@@ -94,11 +100,6 @@ function AppContent() {
           </Auth>
           } />
 
-        <Route path="/supplier-inspection/:supplierId" element={
-          <Auth allowedRoles={["supplier"]}>
-            <SupplierInspection />
-          </Auth>
-        } />
       </Routes>
     </div>
   );

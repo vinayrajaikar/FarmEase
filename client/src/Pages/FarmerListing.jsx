@@ -17,10 +17,7 @@ const FarmerListing = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('fullName');
   const dispatch=useDispatch();
-
-  // Mock data for demonstration (replaced with new structure)
  
-  
   const [farmers, setFarmers] = useState([]);
 
   const filteredFarmers = farmers
