@@ -5,7 +5,6 @@ import { registerSupplier,loginSupplier, logoutSupplier, supplier_refreshAccessT
 
 const router= Router();
 
-// supplier-----------------------------------------------------------------------------------------
 
 router.route("/register-supplier").post(
     upload.fields([

@@ -335,6 +335,17 @@ const getAllSuppliers = asyncHandler(async (req, res) => {
     .json(suppliers);
 });
 
+const getSupplierProfile = asyncHandler(async (req, res) => {
+    const {id} = req.params;
+    const supplier = await Supplier.findById(id).select("-password -refreshToken");
+    if (!supplier) {
+        throw new ApiError(404, "Supplier not found");
+    }
+    return res
+    .status(200)
+    .json(supplier);
+});
+
 
 export{
     registerFarmer,
@@ -345,5 +356,6 @@ export{
     farmer_updateAccountDetails,
     updateFarmerCoverImage,
     updateFarmerPassword,
-    getAllSuppliers
+    getAllSuppliers,
+    getSupplierProfile
 }

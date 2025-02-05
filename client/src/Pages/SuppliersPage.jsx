@@ -13,11 +13,11 @@ import { Phone, Mail, MapPin, Tag } from "lucide-react";
 import { getAllSuppliers } from "../Redux/Slices/farmerSlice";
 import { useDispatch } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 
 function SupplierDirectory() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
 
   const [suppliers, setSuppliers] = useState([]);
   const [filteredSuppliers, setFilteredSuppliers] = useState(suppliers);
@@ -50,7 +50,7 @@ function SupplierDirectory() {
 
   const inspectFn = (supplierId) => {
     console.log(supplierId);
-    navigate(`/supplier-inspection/${supplierId}`);
+    navigate(`/suppliers/${supplierId}`);
   };
 
   return (
