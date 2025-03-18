@@ -7,7 +7,7 @@ app.use(cors({
     // origin: process.env.CORS_ORIGIN,
     // credentials: true
 
-    origin:  ['http://localhost:5173', 'http://localhost:5175'], 
+    origin:  ['http://localhost:5173', 'http://localhost:5175','https://farmease-omega.vercel.app'], 
     credentials: true,
 }));
 
